@@ -5,15 +5,21 @@ metadata:
   namespace: argocd
   annotations:
     kubernetes.io/ingress.class: nginx
-
+    
+    # Backend Protokolü HTTP
     nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
-
+    
+    # --- DEĞİŞİKLİKLER BURADA ---
+    # Redirect döngüsünü kırmak için bunları "false" yapıyoruz.
+    # Güvenliği Cloudflare (Client -> CF arası HTTPS) sağlıyor zaten.
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    
+    # Standart ayarlar
     nginx.ingress.kubernetes.io/ssl-passthrough: "false"
-
-    # Yine de dışarıdan gelen kullanıcıyı HTTPS'e zorla (Cloudflare -> Kullanıcı arası güvenli olsun)
-    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-
     nginx.ingress.kubernetes.io/proxy-body-size: "100m"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "30"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "180"
 spec:
   ingressClassName: nginx
   rules:

@@ -4,7 +4,7 @@ metadata:
   name: ingress-nginx
   namespace: argocd
   annotations:
-    argocd.argoproj.io/sync-wave: "-1" # Diğer uygulamalardan önce deploy et
+    argocd.argoproj.io/sync-wave: "-1"
 spec:
   project: default
   source:
@@ -15,11 +15,25 @@ spec:
       releaseName: ingress-nginx
       parameters:
         - name: controller.service.type
-          value: ClusterIP # Tünel direkt iç ağdan konuşacağı için LoadBalancer şart değil ama ClusterIP yeterli.
+          value: ClusterIP
         - name: controller.ingressClassResource.default
           value: "true"
         - name: controller.watchIngressWithoutClass
           value: "true"
+        
+        # --- EKLENECEK KISIM (BURASI ÇÖZÜM) ---
+        
+        # 1. Nginx'e "Forwarded" başlıklarını okumasını söyle (Cloudflare HTTPS bilgisini böyle gönderir)
+        - name: controller.config.use-forwarded-headers
+          value: "true"
+        
+        # 2. Proxy IP'lerini hesapla (Güvenlik için)
+        - name: controller.config.compute-full-forwarded-for
+          value: "true"
+          
+        # 3. Global olarak SSL zorlamasını kapat (Ingress kuralları yönetecek)
+        - name: controller.config.ssl-redirect
+          value: "false" 
   destination:
     server: https://kubernetes.default.svc
     namespace: ingress
