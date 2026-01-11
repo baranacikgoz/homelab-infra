@@ -1,0 +1,31 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: argocd-server-ingress
+  namespace: argocd
+  annotations:
+    kubernetes.io/ingress.class: nginx
+
+    # KRİTİK AYAR 1: ArgoCD kendi içinde HTTPS konuşur.
+    # Nginx'e "Arkadaki servisle şifreli konuş" diyoruz.
+    # Bunu yazmazsan "502 Bad Gateway" veya "400 Bad Request" alırsın.
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+
+    # KRİTİK AYAR 2: SSL Passthrough yerine SSL Termination yapıyoruz.
+    # Cloudflare -> (HTTPS) -> Tunnel -> (HTTP) -> Nginx -> (HTTPS) -> ArgoCD
+    nginx.ingress.kubernetes.io/ssl-passthrough: "false"
+
+    # Büyük dosya/chart upload edebilmek için limit artırımı
+    nginx.ingress.kubernetes.io/proxy-body-size: "100m"
+spec:
+  rules:
+    - host: argocd.baranacikgoz.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: argocd-server
+                port:
+                  name: https # ArgoCD servisinin HTTPS portuna yönlendir
