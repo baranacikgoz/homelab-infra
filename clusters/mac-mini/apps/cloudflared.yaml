@@ -6,19 +6,9 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://cloudflare.github.io/helm-charts
-    chart: cloudflare-tunnel-remote
-    targetRevision: 0.1.2
-    helm:
-      releaseName: cloudflared
-      values: |
-        cloudflare:
-          secretName: tunnel-credentials
-
-          ingress:
-            # Gelen her şeyi Nginx'e yönlendir
-            - service: http://ingress-nginx-controller.ingress.svc.cluster.local:80
-            - service: http_status:404
+    repoURL: git@github.com:baranacikgoz/homelab-infra.git
+    targetRevision: main
+    path: clusters/mac-mini/apps/cloudflared-resources
   destination:
     server: https://kubernetes.default.svc
     namespace: ingress
@@ -26,3 +16,5 @@ spec:
     automated:
       prune: true
       selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
