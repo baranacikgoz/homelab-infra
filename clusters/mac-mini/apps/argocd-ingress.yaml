@@ -5,22 +5,16 @@ metadata:
   namespace: argocd
   annotations:
     kubernetes.io/ingress.class: nginx
-    # Backend (ArgoCD) HTTPS konuşuyor
-    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
 
-    # ArgoCD'nin kendi sertifikası güvenilir olmadığı için doğrulamayı kapatıyoruz
-    nginx.ingress.kubernetes.io/proxy-ssl-verify: "off"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
 
-    # Bağlanırken Host ismini (SNI) pakete ekle.
-    nginx.ingress.kubernetes.io/proxy-ssl-server-name: "on"
+    nginx.ingress.kubernetes.io/ssl-passthrough: "false"
 
-    # HTTP'den HTTPS'e zorla (Best Practice)
+    # Yine de dışarıdan gelen kullanıcıyı HTTPS'e zorla (Cloudflare -> Kullanıcı arası güvenli olsun)
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
 
-    # Upload limiti
     nginx.ingress.kubernetes.io/proxy-body-size: "100m"
 spec:
-  # Modern K8s standardı: Annotation yerine bu alanı kullanmak daha garantidir
   ingressClassName: nginx
   rules:
     - host: argocd.baranacikgoz.com
@@ -32,4 +26,4 @@ spec:
               service:
                 name: argocd-server
                 port:
-                  number: 443 # İsim yerine direkt port numarasını verelim (Daha güvenli)
+                  number: 80
