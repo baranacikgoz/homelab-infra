@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: bootstrap-apps
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: git@github.com:baranacikgoz/homelab-infrastructure.git
+    targetRevision: main
+    path: clusters/mac-mini/apps
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true # Git'ten silineni Cluster'dan da sil
+      selfHeal: true # Cluster'da elle değiştirileni geri al (Drift Correction)
