@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: git@github.com:baranacikgoz/homelab-infrastructure.git
+    repoURL: git@github.com:baranacikgoz/homelab-infra.git
     targetRevision: main
     path: clusters/mac-mini/apps
   destination:
