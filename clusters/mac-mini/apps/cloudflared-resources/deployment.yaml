@@ -20,10 +20,8 @@ spec:
           image: cloudflare/cloudflared:latest
           args:
             - tunnel
-            # --- KRİTİK KISIM ---
-            # Config dosyasını gösteriyoruz
-            - --config
-            - /etc/cloudflared/config.yaml
+            # --config parametresini kaldırdık!
+            # Sadece 'run' diyoruz, o gidip ayarları Cloudflare'den çekecek.
             - run
           env:
             - name: TUNNEL_TOKEN
@@ -37,16 +35,4 @@ spec:
               port: 2000
             initialDelaySeconds: 10
             periodSeconds: 10
-          # --- VOLUME MOUNT EKLE ---
-          volumeMounts:
-            - name: config
-              mountPath: /etc/cloudflared
-              readOnly: true
-      # --- VOLUME TANIMI ---
-      volumes:
-        - name: config
-          configMap:
-            name: cloudflared-config
-            items:
-              - key: config.yaml
-                path: config.yaml
+          # Volume Mount'ları sildik, gerek kalmadı.
