@@ -1,0 +1,31 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cloudflared
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://cloudflare.github.io/helm-charts
+    chart: cloudflare-tunnel-remote
+    targetRevision: 0.1.2
+    helm:
+      releaseName: cloudflared
+      values: |
+        cloudflare:
+          secretName: tunnel-credentials
+          tunnelId: "139ea0d9-4914-4fc2-9802-daa7e4fb6495"
+          ingress:
+            # Burası kritik: Gelen trafiği Nginx Controller Service'ine yönlendiriyoruz
+            # Service adı genelde: ingress-nginx-controller
+            # Namespace: ingress
+            # Port: 80
+            - service: http://ingress-nginx-controller.ingress.svc.cluster.local:80
+            - service: http_status:404
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: ingress
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
