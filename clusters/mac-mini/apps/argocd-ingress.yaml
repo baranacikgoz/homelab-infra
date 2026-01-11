@@ -11,6 +11,9 @@ metadata:
     # ArgoCD'nin kendi sertifikası güvenilir olmadığı için doğrulamayı kapatıyoruz
     nginx.ingress.kubernetes.io/proxy-ssl-verify: "off"
 
+    # Bağlanırken Host ismini (SNI) pakete ekle.
+    nginx.ingress.kubernetes.io/proxy-ssl-server-name: "on"
+
     # HTTP'den HTTPS'e zorla (Best Practice)
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
 
