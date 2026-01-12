@@ -6,38 +6,41 @@ metadata:
 spec:
   project: default
   source:
-    # 1. Helm deposunu belirtiyoruz
-    repoURL: https://g-radano.github.io/helm-charts/
+    # 1. Yeni ve güvenilir repo (Nicholas Wilde)
+    repoURL: https://charts.nicholaswilde.io
     chart: vaultwarden
-    targetRevision: 1.1.2 # Chart versiyonu
-    # 2. 'values' kısmı, manuel yazdığımız Deployment/Ingress ayarlarının yerini alır
+    targetRevision: 1.2.1 # Güncel versiyon
     helm:
       values: |
         image:
+          repository: vaultwarden/server
           tag: latest
         
+        # Vaultwarden spesifik ayarlar
         domain: "https://passwords.baranacikgoz.com"
         
-        # Manuel yazdığımız env'ler burada 'env' altına girer
         env:
           SIGNUPS_ALLOWED: "true"
           WEBSOCKET_ENABLED: "true"
         
-        # Manuel PVC dosyamızın yerini bu blok alır
+        # Depolama ayarları
         persistence:
           enabled: true
           size: 1Gi
         
-        # Manuel Ingress dosyamızın yerini bu blok alır
+        # Ingress ayarları
         ingress:
           enabled: true
-          className: "nginx"
-          hostname: passwords.baranacikgoz.com
           annotations:
             kubernetes.io/ingress.class: nginx
             nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
             nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
-          tls: [] # SSL'i Cloudflare hallettiği için boş bırakıyoruz
+          hosts:
+            - host: passwords.baranacikgoz.com
+              paths:
+                - path: /
+                  pathType: ImplementationSpecific
+          tls: [] # SSL Cloudflare'de
   
   destination:
     server: https://kubernetes.default.svc
