@@ -20,6 +20,8 @@ spec:
           image: cloudflare/cloudflared:latest
           args:
             - tunnel
+            - --metrics
+            - 0.0.0.0:2000
             # --config parametresini kaldırdık!
             # Sadece 'run' diyoruz, o gidip ayarları Cloudflare'den çekecek.
             - run
@@ -35,4 +37,5 @@ spec:
               port: 2000
             initialDelaySeconds: 10
             periodSeconds: 10
+            failureThreshold: 3
           # Volume Mount'ları sildik, gerek kalmadı.
