@@ -24,7 +24,7 @@ spec:
             - name: DOMAIN
               value: "https://passwords.baranacikgoz.com"
             - name: SIGNUPS_ALLOWED
-              value: "true"
+              value: "false"
             - name: WEBSOCKET_ENABLED
               value: "true"
           ports:
