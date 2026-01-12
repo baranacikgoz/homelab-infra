@@ -1,0 +1,50 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: vaultwarden-helm
+  namespace: argocd
+spec:
+  project: default
+  source:
+    # 1. Helm deposunu belirtiyoruz
+    repoURL: https://g-radano.github.io/helm-charts/
+    chart: vaultwarden
+    targetRevision: 1.1.2 # Chart versiyonu
+    # 2. 'values' kısmı, manuel yazdığımız Deployment/Ingress ayarlarının yerini alır
+    helm:
+      values: |
+        image:
+          tag: latest
+        
+        domain: "https://passwords.baranacikgoz.com"
+        
+        # Manuel yazdığımız env'ler burada 'env' altına girer
+        env:
+          SIGNUPS_ALLOWED: "true"
+          WEBSOCKET_ENABLED: "true"
+        
+        # Manuel PVC dosyamızın yerini bu blok alır
+        persistence:
+          enabled: true
+          size: 1Gi
+        
+        # Manuel Ingress dosyamızın yerini bu blok alır
+        ingress:
+          enabled: true
+          className: "nginx"
+          hostname: passwords.baranacikgoz.com
+          annotations:
+            kubernetes.io/ingress.class: nginx
+            nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+            nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+          tls: [] # SSL'i Cloudflare hallettiği için boş bırakıyoruz
+  
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: homelab
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
