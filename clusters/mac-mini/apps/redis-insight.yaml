@@ -1,4 +1,4 @@
-apiVersion: argoyaml
+apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: redis-insight
@@ -11,16 +11,13 @@ spec:
     targetRevision: 2.54.0
     helm:
       values: |
-        # --- OPTİMİZASYON ---
         resources:
           requests:
             cpu: 100m
             memory: 256Mi
           limits:
             memory: 512Mi
-        # --------------------
 
-        # Ingress ile dışarı açıyoruz
         ingress:
           enabled: true
           ingressClassName: nginx
@@ -28,7 +25,7 @@ spec:
           annotations:
             kubernetes.io/ingress.class: nginx
             nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
-            nginx.ingress.kubernetes.io/ssl-redirect: "false" # Döngüyü engelle
+            nginx.ingress.kubernetes.io/ssl-redirect: "false"
             nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
   destination:
     server: https://kubernetes.default.svc
@@ -38,4 +35,4 @@ spec:
       prune: true
       selfHeal: true
     syncOptions:
-      - CreateNamespace=true
+      - CreateNamespace:true
