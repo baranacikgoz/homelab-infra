@@ -35,39 +35,11 @@ spec:
           MINIO_SERVER_URL: "https://minio.baranacikgoz.com"
           MINIO_BROWSER_REDIRECT_URL: "https://console.minio.baranacikgoz.com"
 
-        # --- KRİTİK AYAR 2: INGRESS AYRIMI ---
-
-        # 1. API İçin Ingress (S3 trafiği - Port 9000)
         ingress:
-          enabled: true
-          ingressClassName: nginx
-          annotations:
-            kubernetes.io/ingress.class: nginx
-            nginx.ingress.kubernetes.io/proxy-body-size: "0" # Limitsiz upload
-            nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
-            nginx.ingress.kubernetes.io/ssl-redirect: "false"
-            nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
-          hosts:
-            - minio.baranacikgoz.com
-
-        # 2. Console İçin Ingress (Web Arayüzü - Port 9001)
+          enabled: false # manuel ingress tanımı yapacağız
         consoleIngress:
-          enabled: true
-          ingressClassName: nginx
-          annotations:
-            kubernetes.io/ingress.class: nginx
-            nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
-            nginx.ingress.kubernetes.io/ssl-redirect: "false"
-            nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
-            nginx.ingress.kubernetes.io/proxy-body-size: "0"
-            
-            # --- KRİTİK EKLENTİLER (KOPMALARI ÖNLER) ---
-            nginx.ingress.kubernetes.io/proxy-buffering: "off"
-            nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
-            nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
-            nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
-            # -------------------------------------------
-            
+          enabled: false # manuel ingress tanımı yapacağız
+
           hosts:
             - console.minio.baranacikgoz.com
           # --- ÇÖZÜM BURASI: SERVİSİ ZORLUYORUZ ---
