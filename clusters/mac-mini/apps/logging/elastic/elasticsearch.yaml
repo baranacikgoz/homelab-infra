@@ -16,13 +16,13 @@ spec:
             - name: elasticsearch
               resources:
                 requests:
-                  memory: 2Gi # Başlangıçta 2GB iste
+                  memory: 1.5Gi # Başlangıçta 2GB iste
                   cpu: 1 # 1 CPU çekirdeği (hızlı açılması için)
                 limits:
-                  memory: 3Gi # En fazla 3GB'a çıkabilsin (OOM Kill yememesi için tampon)
+                  memory: 2.5Gi # En fazla 3GB'a çıkabilsin (OOM Kill yememesi için tampon)
               env:
                 - name: ES_JAVA_OPTS
-                  value: "-Xms2g -Xmx2g" # Java Heap'i 2GB'a sabitliyoruz
+                  value: "-Xms1g -Xmx1g" # Java Heap'i 1GB'a sabitliyoruz
       volumeClaimTemplates:
         - metadata:
             name: elasticsearch-data
