@@ -27,10 +27,14 @@ spec:
         rootPassword: "changeme123"
 
         environment:
+          # BURASI ÇOK ÖNEMLİ: MinIO'ya "Sen HTTP çalış ama dış dünyadaki adresin budur" diyoruz.
           MINIO_SERVER_URL: "https://minio.baranacikgoz.com"
           MINIO_BROWSER_REDIRECT_URL: "https://console.minio.baranacikgoz.com"
+          # Ekstra Güvenlik/Uyumluluk
+          MINIO_SERVER_PORT: "9000"
+          MINIO_BROWSER_PORT: "9001"
 
-        # HELM ÜZERİNDEN TEK VE DOĞRU INGRESS YAPILANDIRMASI
+        # API INGRESS
         ingress:
           enabled: true
           ingressClassName: nginx
@@ -38,9 +42,13 @@ spec:
             kubernetes.io/ingress.class: nginx
             nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
             nginx.ingress.kubernetes.io/proxy-body-size: "0"
+            # Nginx'e dışarının HTTPS olduğunu fısıldıyoruz
+            nginx.ingress.kubernetes.io/configuration-snippet: |
+              proxy_set_header X-Forwarded-Proto https;
           hosts:
             - minio.baranacikgoz.com
 
+        # CONSOLE INGRESS
         consoleIngress:
           enabled: true
           ingressClassName: nginx
@@ -49,6 +57,9 @@ spec:
             nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
             nginx.ingress.kubernetes.io/proxy-body-size: "0"
             nginx.ingress.kubernetes.io/proxy-buffering: "off"
+            # Nginx'e dışarının HTTPS olduğunu fısıldıyoruz
+            nginx.ingress.kubernetes.io/configuration-snippet: |
+              proxy_set_header X-Forwarded-Proto https;
           hosts:
             - console.minio.baranacikgoz.com
   destination:
