@@ -1,0 +1,18 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: main-db
+  namespace: database
+spec:
+  instances: 1 # Tek node (Home lab için yeterli)
+
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "100m"
+    limits:
+      memory: "1Gi"
+
+  storage:
+    size: 5Gi
+    storageClass: local-path # OrbStack varsayılanı (veya boş bırak)
