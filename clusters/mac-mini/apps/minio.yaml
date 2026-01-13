@@ -1,0 +1,54 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: minio
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  project: default
+  source:
+    repoURL: https://charts.min.io/
+    chart: minio
+    targetRevision: 5.4.0
+    helm:
+      values: |
+        # Standalone mod (Home lab için yeterli, Distributed mod en az 4 disk ister)
+        mode: standalone
+        replicas: 1
+
+        # --- OPTİMİZASYON ---
+        resources:
+          requests:
+            memory: 128Mi
+            cpu: 100m
+          limits:
+            memory: 512Mi # 512MB RAM limiti yeterli
+        # --------------------
+
+        persistence:
+          size: 10Gi # 10GB Disk
+
+        # Giriş Bilgileri (Bunu production'da Vault'tan çekmek gerekir ama şimdilik manuel)
+        rootUser: "admin"
+        rootPassword: "changeme123"
+
+        # Ingress Ayarları (Console ve API için)
+        ingress:
+          enabled: true
+          ingressClassName: nginx
+          annotations:
+            kubernetes.io/ingress.class: nginx
+            nginx.ingress.kubernetes.io/proxy-body-size: "0" # Dosya yükleme limitini kaldır
+          hosts:
+            - minio.baranacikgoz.com # API Endpoint (Kodun buraya bağlanacak)
+            - console.minio.baranacikgoz.com # Yönetim Paneli
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: homelab
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
