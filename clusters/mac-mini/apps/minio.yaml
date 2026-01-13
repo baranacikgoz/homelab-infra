@@ -13,36 +13,48 @@ spec:
     targetRevision: 5.4.0
     helm:
       values: |
-        # Standalone mod (Home lab için yeterli, Distributed mod en az 4 disk ister)
         mode: standalone
         replicas: 1
 
-        # --- OPTİMİZASYON ---
         resources:
           requests:
             memory: 128Mi
             cpu: 100m
           limits:
-            memory: 512Mi # 512MB RAM limiti yeterli
-        # --------------------
+            memory: 512Mi
 
         persistence:
-          size: 10Gi # 10GB Disk
+          size: 10Gi
 
-        # Giriş Bilgileri (Bunu production'da Vault'tan çekmek gerekir ama şimdilik manuel)
         rootUser: "admin"
         rootPassword: "changeme123"
 
-        # Ingress Ayarları (Console ve API için)
+        # --- KRİTİK AYAR 1: ORTAM DEĞİŞKENLERİ ---
+        # MinIO'ya dış adreslerini öğretiyoruz ki port eklemesin
+        environment:
+          MINIO_SERVER_URL: "https://minio.baranacikgoz.com"
+          MINIO_BROWSER_REDIRECT_URL: "https://console.minio.baranacikgoz.com"
+
+        # --- KRİTİK AYAR 2: INGRESS AYRIMI ---
+
+        # 1. API İçin Ingress (S3 trafiği - Port 9000)
         ingress:
           enabled: true
           ingressClassName: nginx
           annotations:
             kubernetes.io/ingress.class: nginx
-            nginx.ingress.kubernetes.io/proxy-body-size: "0" # Dosya yükleme limitini kaldır
+            nginx.ingress.kubernetes.io/proxy-body-size: "0" # Limitsiz upload
           hosts:
-            - minio.baranacikgoz.com # API Endpoint (Kodun buraya bağlanacak)
-            - console.minio.baranacikgoz.com # Yönetim Paneli
+            - minio.baranacikgoz.com
+
+        # 2. Console İçin Ingress (Web Arayüzü - Port 9001)
+        consoleIngress:
+          enabled: true
+          ingressClassName: nginx
+          annotations:
+            kubernetes.io/ingress.class: nginx
+          hosts:
+            - console.minio.baranacikgoz.com
   destination:
     server: https://kubernetes.default.svc
     namespace: homelab
