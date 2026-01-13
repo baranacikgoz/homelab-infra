@@ -1,0 +1,38 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kube-prometheus-stack
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://prometheus-community.github.io/helm-charts
+    chart: kube-prometheus-stack
+    targetRevision: 61.3.1 # Stabil bir versiyon
+    helm:
+      values: |
+        # Grafana ayarları
+        grafana:
+          adminPassword: "change-this-password123"
+          ingress:
+            enabled: true
+            ingressClassName: nginx
+            hosts:
+              - grafana.baranacikgoz.com
+            annotations:
+              kubernetes.io/ingress.class: nginx
+
+        # Prometheus ayarları
+        prometheus:
+          prometheusSpec:
+            storageSpec:
+              volumeClaimTemplate:
+                spec:
+                  accessModes: ["ReadWriteOnce"]
+                  resources:
+                    requests:
+                      storage: 10Gi # Geçmiş veriler için 10GB yer ayır
+
+        # Mac Mini'nin donanım verilerini çekmek için
+        nodeExporter:
+          enabled: true
