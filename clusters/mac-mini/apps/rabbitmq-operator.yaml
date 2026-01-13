@@ -14,6 +14,8 @@ spec:
     helm:
       values: |
         # Operator'ün kendisi için kaynak limitleri
+        image:
+          tag: latest
         resources:
           limits:
             cpu: 100m
