@@ -60,6 +60,14 @@ spec:
             nginx.ingress.kubernetes.io/ssl-redirect: "false"
             nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
             nginx.ingress.kubernetes.io/proxy-body-size: "0"
+            
+            # --- KRİTİK EKLENTİLER (KOPMALARI ÖNLER) ---
+            nginx.ingress.kubernetes.io/proxy-buffering: "off"
+            nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
+            nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+            nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+            # -------------------------------------------
+            
           hosts:
             - console.minio.baranacikgoz.com
           # --- ÇÖZÜM BURASI: SERVİSİ ZORLUYORUZ ---
