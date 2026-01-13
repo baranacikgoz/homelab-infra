@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-insight-service
+  namespace: database
+spec:
+  selector:
+    app: redis-insight
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8001
