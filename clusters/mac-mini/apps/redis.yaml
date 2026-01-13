@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: https://charts.bitnami.com/bitnami
     chart: redis
-    targetRevision: 19.8.1 # Güncel stabil versiyon
+    targetRevision: 24.1.0 # Güncel stabil versiyon
     helm:
       values: |
         # Standalone modda, "master" olarak çalışacak
