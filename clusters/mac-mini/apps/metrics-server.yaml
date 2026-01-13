@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: metrics-server
-  namespace: argo-cd # Burası argocd olmalı
+  namespace: argocd # Burası argocd olmalı
 spec:
   project: default
   source:
