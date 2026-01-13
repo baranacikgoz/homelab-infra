@@ -1,0 +1,18 @@
+apiVersion: kibana.k8s.elastic.co/v1
+kind: Kibana
+metadata:
+  name: main-kibana
+  namespace: logging
+spec:
+  version: 8.17.0
+  count: 1
+  elasticsearchRef:
+    name: main-cluster
+  podTemplate:
+    spec:
+      containers:
+        - name: kibana
+          resources:
+            limits:
+              memory: 512Mi # 512MB'dan fazla yemesin
+              cpu: 500m
