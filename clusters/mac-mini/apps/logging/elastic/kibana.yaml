@@ -13,6 +13,8 @@ spec:
       containers:
         - name: kibana
           resources:
-            limits:
-              memory: 512Mi # 512MB'dan fazla yemesin
+            requests:
+              memory: 1Gi # En az 1GB ile başla (Node.js rahatlasın)
               cpu: 500m
+            limits:
+              memory: 1.5Gi # Tampon payı

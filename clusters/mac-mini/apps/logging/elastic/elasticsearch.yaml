@@ -14,16 +14,15 @@ spec:
         spec:
           containers:
             - name: elasticsearch
-              # --- RAM TASARRUFU BURADA ---
               resources:
                 requests:
-                  memory: 512Mi
-                  cpu: 500m
+                  memory: 2Gi # Başlangıçta 2GB iste
+                  cpu: 1 # 1 CPU çekirdeği (hızlı açılması için)
                 limits:
-                  memory: 1Gi # Asla 1GB'ı geçmesin
+                  memory: 3Gi # En fazla 3GB'a çıkabilsin (OOM Kill yememesi için tampon)
               env:
                 - name: ES_JAVA_OPTS
-                  value: "-Xms512m -Xmx512m" # Java Heap sabit 512MB
+                  value: "-Xms2g -Xmx2g" # Java Heap'i 2GB'a sabitliyoruz
       volumeClaimTemplates:
         - metadata:
             name: elasticsearch-data
