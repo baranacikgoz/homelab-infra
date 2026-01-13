@@ -23,7 +23,26 @@ spec:
             annotations:
               kubernetes.io/ingress.class: nginx
 
+        kubelet:
+          serviceMonitor:
+            https: true
+            insecureSkipVerify: true # OrbStack sertifikasını görmezden gel
+
         prometheus:
+          # Ingress Ayarlarını BURAYA ekliyoruz
+          ingress:
+            enabled: true
+            ingressClassName: nginx
+            hosts:
+              - prometheus.baranacikgoz.com
+            paths:
+              - /
+            annotations:
+              kubernetes.io/ingress.class: nginx
+              # Büyük sorgular için timeout artıralım
+              nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+              nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+
           prometheusSpec:
             storageSpec:
               volumeClaimTemplate:
@@ -32,6 +51,7 @@ spec:
                   resources:
                     requests:
                       storage: 10Gi
+            kubeletJob: true
 
         nodeExporter:
           enabled: true
