@@ -15,10 +15,10 @@ spec:
       values: |
         resources:
           requests:
-            memory: 384Mi
+            memory: 256Mi
             cpu: 250m
           limits:
-            memory: 768Mi
+            memory: 512Mi
             # CPU Limitini 1 Core'a çıkarıyoruz ki açılışta boğulmasın
             cpu: 1000m 
 

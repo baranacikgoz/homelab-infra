@@ -50,6 +50,9 @@ spec:
               nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
 
           prometheusSpec:
+            scrapeInterval: "1m" # 15sn yerine 1 dakikada bir veri çek
+            evaluationInterval: "1m" # Kuralları 1 dakikada bir çalıştır
+            
             resources:
               requests:
                 memory: 512Mi
