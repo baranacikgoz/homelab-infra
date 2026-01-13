@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: metrics-server
-  namespace: argocd # Burası argocd olmalı
+  namespace: argocd
 spec:
   project: default
   source:
@@ -17,12 +17,20 @@ spec:
           - --metric-resolution=15s
           - --kubelet-insecure-tls
 
-  # --- EKSİK KISIM BURASIYDI ---
+        # --- ORBSTACK İÇİN SİHİRLİ DOKUNUŞ BURASI ---
+        extraVolumeMounts:
+          - name: kubelet-config
+            mountPath: /etc/kubernetes/kubelet.conf
+            readOnly: true
+        extraVolumes:
+          - name: kubelet-config
+            hostPath:
+              path: /var/lib/kubelet/kubelet.conf
+        # ----------------------------------------
+
   destination:
     server: https://kubernetes.default.svc
-    # Metrics-server her zaman kube-system içine kurulur (Best Practice)
     namespace: kube-system
-  # -----------------------------
 
   syncPolicy:
     automated:
