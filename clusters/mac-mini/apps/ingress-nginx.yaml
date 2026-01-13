@@ -20,20 +20,25 @@ spec:
           value: "true"
         - name: controller.watchIngressWithoutClass
           value: "true"
-        
-        # --- EKLENECEK KISIM (BURASI ÇÖZÜM) ---
-        
+
         # 1. Nginx'e "Forwarded" başlıklarını okumasını söyle (Cloudflare HTTPS bilgisini böyle gönderir)
         - name: controller.config.use-forwarded-headers
           value: "true"
-        
+
         # 2. Proxy IP'lerini hesapla (Güvenlik için)
         - name: controller.config.compute-full-forwarded-for
           value: "true"
-          
+
         # 3. Global olarak SSL zorlamasını kapat (Ingress kuralları yönetecek)
         - name: controller.config.ssl-redirect
-          value: "false" 
+          value: "false"
+
+        - name: controller.resources.requests.cpu
+          value: "100m"
+        - name: controller.resources.requests.memory
+          value: "90Mi"
+        - name: controller.resources.limits.memory
+          value: "256Mi"
   destination:
     server: https://kubernetes.default.svc
     namespace: ingress

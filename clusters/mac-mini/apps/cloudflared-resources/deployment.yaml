@@ -31,6 +31,12 @@ spec:
                 secretKeyRef:
                   name: tunnel-credentials
                   key: tunnelToken
+          resources:
+            requests:
+              cpu: 10m
+              memory: 64Mi
+            limits:
+              memory: 128Mi
           livenessProbe:
             httpGet:
               path: /ready

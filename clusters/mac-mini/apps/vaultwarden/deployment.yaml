@@ -27,6 +27,12 @@ spec:
               value: "false"
             - name: WEBSOCKET_ENABLED
               value: "true"
+          resources:
+            requests:
+              cpu: 10m
+              memory: 64Mi
+            limits:
+              memory: 256Mi
           ports:
             - containerPort: 80
             - containerPort: 3012

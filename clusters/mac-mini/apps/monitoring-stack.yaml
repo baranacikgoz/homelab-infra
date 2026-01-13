@@ -15,6 +15,12 @@ spec:
       values: |
         grafana:
           adminPassword: "change-this-password123"
+          resources:
+            limits:
+              memory: 256Mi
+            requests:
+              cpu: 50m
+              memory: 64Mi
           ingress:
             enabled: true
             ingressClassName: nginx
@@ -44,6 +50,11 @@ spec:
               nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
 
           prometheusSpec:
+            resources:
+              requests:
+                memory: 512Mi
+              limits:
+                memory: 1Gi
             storageSpec:
               volumeClaimTemplate:
                 spec:
@@ -55,6 +66,12 @@ spec:
 
         nodeExporter:
           enabled: true
+          resources:
+            limits:
+              memory: 64Mi
+            requests:
+              cpu: 10m
+              memory: 32Mi
 
   destination:
     server: https://kubernetes.default.svc
