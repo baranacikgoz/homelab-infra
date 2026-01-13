@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: https://redis-charts.github.io/redis-charts/
     chart: redisinsight
-    targetRevision: 2.54.0
+    targetRevision: 2.50.0
     helm:
       values: |
         resources:
