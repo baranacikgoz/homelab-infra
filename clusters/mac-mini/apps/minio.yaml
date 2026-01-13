@@ -39,14 +39,6 @@ spec:
           enabled: false # manuel ingress tanımı yapacağız
         consoleIngress:
           enabled: false # manuel ingress tanımı yapacağız
-
-          hosts:
-            - console.minio.baranacikgoz.com
-          # --- ÇÖZÜM BURASI: SERVİSİ ZORLUYORUZ ---
-          # Helm'in tahmin etmesini beklemeden servisi ve portu biz söylüyoruz
-          service:
-            name: minio-console
-            port: 9001
   destination:
     server: https://kubernetes.default.svc
     namespace: homelab
