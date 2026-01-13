@@ -35,8 +35,6 @@ spec:
         extraEnvs:
           - name: JAVA_TOOL_OPTIONS
             value: "-Xms384m -Xmx384m -XX:+UseG1GC -Dvertx.blockedThreadCheckInterval=60000"
-          - name: STRIMZI_OPERATION_TIMEOUT_MS
-            value: "300000"
           - name: STRIMZI_RECONCILIATION_INTERVAL_MS
             value: "120000"
 
