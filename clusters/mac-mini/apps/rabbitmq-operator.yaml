@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: https://charts.bitnami.com/bitnami
     chart: rabbitmq-cluster-operator
-    targetRevision: 4.3.26 # Stabil güncel sürüm
+    targetRevision: 4.4.34 # Stabil güncel sürüm
     helm:
       values: |
         # Operator'ün kendisi için kaynak limitleri
