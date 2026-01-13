@@ -11,10 +11,9 @@ spec:
     targetRevision: 3.12.1
     helm:
       values: |
+        # --- ORBSTACK UYUMLULUK AYARLARI ---
         args:
-          - --kubelet-insecure-tls # Lokal cluster için şart
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: kube-system
-  syncPolicy:
-    automated: { prune: true, selfHeal: true }
+          - --kubelet-preferred-address-types=InternalDNS,InternalIP,ExternalIP,Hostname
+          - --kubelet-use-node-status-port
+          - --metric-resolution=15s
+          - --kubelet-insecure-tls
