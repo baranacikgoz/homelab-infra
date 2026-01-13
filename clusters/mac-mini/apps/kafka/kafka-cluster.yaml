@@ -21,13 +21,13 @@ spec:
   resources:
     # --- RAM OPTİMİZASYONU ---
     requests:
-      memory: 512Mi
+      memory: 384Mi
       cpu: 250m
     limits:
-      memory: 1Gi # Max 1GB yesin
+      memory: 512Mi
   jvmOptions:
-    -Xms: 512m
-    -Xmx: 512m # Java Heap sabit 512MB
+    -Xms: 384m
+    -Xmx: 384m
 ---
 # Kafka Cluster Config
 apiVersion: kafka.strimzi.io/v1beta2

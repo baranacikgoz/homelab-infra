@@ -16,10 +16,10 @@ spec:
             - name: elasticsearch
               resources:
                 requests:
-                  memory: 1.5Gi # Başlangıçta 2GB iste
-                  cpu: 1 # 1 CPU çekirdeği (hızlı açılması için)
+                  memory: 1Gi
+                  cpu: 1
                 limits:
-                  memory: 2.5Gi # En fazla 3GB'a çıkabilsin (OOM Kill yememesi için tampon)
+                  memory: 1.5Gi
               env:
                 - name: ES_JAVA_OPTS
                   value: "-Xms1g -Xmx1g" # Java Heap'i 1GB'a sabitliyoruz
