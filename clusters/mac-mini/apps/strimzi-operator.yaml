@@ -11,6 +11,35 @@ spec:
     repoURL: https://strimzi.io/charts/
     chart: strimzi-kafka-operator
     targetRevision: 0.43.0
+    # --- EKLENEN KISIM ---
+    helm:
+      values: |
+        # Operator'ün kendisine kaynak verelim (JVM rahatlasın)
+        resources:
+          requests:
+            memory: 384Mi
+            cpu: 200m
+          limits:
+            memory: 768Mi # Operator için 512MB yeterli
+
+        # Java başlangıcı yavaş olabilir, Kubernetes'e "Biraz bekle" diyoruz
+        livenessProbe:
+          initialDelaySeconds: 60 # 10 yerine 60 saniye bekle
+          periodSeconds: 20
+        readinessProbe:
+          initialDelaySeconds: 60
+          periodSeconds: 20
+
+        javaOptions: "-Xms384m -Xmx384m -XX:+UseG1GC"
+
+        extraEnvs:
+          - name: STRIMZI_OPERATION_TIMEOUT_MS
+            value: "300000" # 5 Dakika (Varsayılan 300sn ama garanti olsun)
+          - name: STRIMZI_RECONCILIATION_INTERVAL_MS
+            value: "120000" # 2 Dakikada bir kontrol et (CPU tasarrufu)
+
+        # Log seviyesini biraz kısalım, gereksiz I/O yapmasın
+        logLevel: INFO
   destination:
     server: https://kubernetes.default.svc
     namespace: kafka-system
