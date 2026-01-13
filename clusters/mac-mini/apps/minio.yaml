@@ -44,6 +44,9 @@ spec:
           annotations:
             kubernetes.io/ingress.class: nginx
             nginx.ingress.kubernetes.io/proxy-body-size: "0" # Limitsiz upload
+            nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+            nginx.ingress.kubernetes.io/ssl-redirect: "false"
+            nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
           hosts:
             - minio.baranacikgoz.com
 
@@ -53,8 +56,17 @@ spec:
           ingressClassName: nginx
           annotations:
             kubernetes.io/ingress.class: nginx
+            nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+            nginx.ingress.kubernetes.io/ssl-redirect: "false"
+            nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
+            nginx.ingress.kubernetes.io/proxy-body-size: "0"
           hosts:
             - console.minio.baranacikgoz.com
+          # --- ÇÖZÜM BURASI: SERVİSİ ZORLUYORUZ ---
+          # Helm'in tahmin etmesini beklemeden servisi ve portu biz söylüyoruz
+          service:
+            name: minio-console
+            port: 9001
   destination:
     server: https://kubernetes.default.svc
     namespace: homelab
