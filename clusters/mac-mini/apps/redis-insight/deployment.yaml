@@ -27,5 +27,5 @@ spec:
               memory: 512Mi
 
           ports:
-            - containerPort: 8001
+            - containerPort: 5540
               name: http
