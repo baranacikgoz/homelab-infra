@@ -54,6 +54,8 @@ vault:
     enabled: true
     replicas: 1
     affinity: {}
+    strategy:
+      type: Recreate
     resources:
       requests:
         cpu: 50m
