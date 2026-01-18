@@ -1,0 +1,10 @@
+apiVersion: v2
+name: ingress-nginx
+description: Wrapper chart for ingress-nginx with standard configurations
+type: application
+version: 1.0.0
+appVersion: 1.0.0
+dependencies:
+  - name: ingress-nginx
+    version: 4.10.0
+    repository: https://kubernetes.github.io/ingress-nginx

@@ -1,0 +1,74 @@
+kube-prometheus-stack:
+  grafana:
+    adminPassword: "change-this-password123"
+    resources:
+      limits:
+        memory: 256Mi
+      requests:
+        cpu: 50m
+        memory: 64Mi
+    ingress:
+      enabled: true
+      ingressClassName: nginx
+      hosts:
+        - grafana.baranacikgoz.com
+      annotations:
+        kubernetes.io/ingress.class: nginx
+        nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+        nginx.ingress.kubernetes.io/ssl-redirect: "false"
+        nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
+        nginx.ingress.kubernetes.io/configuration-snippet: |
+          proxy_set_header X-Forwarded-Proto https;
+
+  kubelet:
+    serviceMonitor:
+      https: true
+      insecureSkipVerify: true # OrbStack fix
+
+  prometheus:
+    ingress:
+      enabled: true
+      ingressClassName: nginx
+      hosts:
+        - prometheus.baranacikgoz.com
+      paths:
+        - /
+      annotations:
+        kubernetes.io/ingress.class: nginx
+        nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+        nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+        nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+        nginx.ingress.kubernetes.io/ssl-redirect: "false"
+        nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
+        nginx.ingress.kubernetes.io/configuration-snippet: |
+          proxy_set_header X-Forwarded-Proto https;
+
+    prometheusSpec:
+      scrapeInterval: "1m"
+      evaluationInterval: "1m"
+      retention: "2d"
+      
+      resources:
+        requests:
+          memory: 512Mi
+        limits:
+          memory: 1Gi
+      
+      storageSpec:
+        volumeClaimTemplate:
+          spec:
+            accessModes: ["ReadWriteOnce"]
+            resources:
+              requests:
+                storage: 10Gi
+      
+      kubeletJob: true
+
+  nodeExporter:
+    enabled: true
+    resources:
+      limits:
+        memory: 128Mi
+      requests:
+        cpu: 10m
+        memory: 32Mi

@@ -6,53 +6,9 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://charts.min.io/
-    chart: minio
-    targetRevision: 5.4.0
-    helm:
-      values: |
-        mode: standalone
-        replicas: 1
-        resources:
-          requests:
-            memory: 128Mi
-            cpu: 100m
-          limits:
-            memory: 512Mi
-        persistence:
-          size: 10Gi
-        rootUser: "admin"
-        rootPassword: "changeme123" # Kurulumdan sonra değiştirebilirsin
-
-        environment:
-          MINIO_SERVER_URL: "https://minio.baranacikgoz.com"
-          MINIO_BROWSER_REDIRECT_URL: "https://console.minio.baranacikgoz.com"
-
-        # HELM ÜZERİNDEN TEK VE KESİN INGRESS TANIMI
-        ingress:
-          enabled: true
-          ingressClassName: nginx
-          annotations:
-            kubernetes.io/ingress.class: nginx
-            nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
-            nginx.ingress.kubernetes.io/proxy-body-size: "0"
-            nginx.ingress.kubernetes.io/configuration-snippet: |
-              proxy_set_header X-Forwarded-Proto https;
-          hosts:
-            - minio.baranacikgoz.com
-
-        consoleIngress:
-          enabled: true
-          ingressClassName: nginx
-          annotations:
-            kubernetes.io/ingress.class: nginx
-            nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
-            nginx.ingress.kubernetes.io/proxy-body-size: "0"
-            nginx.ingress.kubernetes.io/proxy-buffering: "off"
-            nginx.ingress.kubernetes.io/configuration-snippet: |
-              proxy_set_header X-Forwarded-Proto https;
-          hosts:
-            - console.minio.baranacikgoz.com
+    repoURL: git@github.com:baranacikgoz/homelab-infra.git
+    targetRevision: main
+    path: clusters/mac-mini/apps/minio
   destination:
     server: https://kubernetes.default.svc
     namespace: homelab

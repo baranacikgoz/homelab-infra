@@ -1,0 +1,19 @@
+ingress-nginx:
+  controller:
+    service:
+      type: ClusterIP
+    ingressClassResource:
+      default: true
+    watchIngressWithoutClass: true
+    
+    config:
+      use-forwarded-headers: "true"
+      compute-full-forwarded-for: "true"
+      ssl-redirect: "false"
+
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        memory: 256Mi

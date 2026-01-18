@@ -14,6 +14,8 @@ metadata:
     # Güvenliği Cloudflare (Client -> CF arası HTTPS) sağlıyor zaten.
     nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      proxy_set_header X-Forwarded-Proto https;
     
     # Standart ayarlar
     nginx.ingress.kubernetes.io/ssl-passthrough: "false"

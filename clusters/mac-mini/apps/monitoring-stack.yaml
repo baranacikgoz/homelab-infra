@@ -8,73 +8,9 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://prometheus-community.github.io/helm-charts
-    chart: kube-prometheus-stack
-    targetRevision: 61.3.1
-    helm:
-      values: |
-        grafana:
-          adminPassword: "change-this-password123"
-          resources:
-            limits:
-              memory: 256Mi
-            requests:
-              cpu: 50m
-              memory: 64Mi
-          ingress:
-            enabled: true
-            ingressClassName: nginx
-            hosts:
-              - grafana.baranacikgoz.com
-            annotations:
-              kubernetes.io/ingress.class: nginx
-
-        kubelet:
-          serviceMonitor:
-            https: true
-            insecureSkipVerify: true # OrbStack sertifikasını görmezden gel
-
-        prometheus:
-          # Ingress Ayarlarını BURAYA ekliyoruz
-          ingress:
-            enabled: true
-            ingressClassName: nginx
-            hosts:
-              - prometheus.baranacikgoz.com
-            paths:
-              - /
-            annotations:
-              kubernetes.io/ingress.class: nginx
-              # Büyük sorgular için timeout artıralım
-              nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
-              nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
-
-          prometheusSpec:
-            scrapeInterval: "1m" # 15sn yerine 1 dakikada bir veri çek
-            evaluationInterval: "1m" # Kuralları 1 dakikada bir çalıştır
-            
-            resources:
-              requests:
-                memory: 512Mi
-              limits:
-                memory: 1Gi
-            storageSpec:
-              volumeClaimTemplate:
-                spec:
-                  accessModes: ["ReadWriteOnce"]
-                  resources:
-                    requests:
-                      storage: 10Gi
-            kubeletJob: true
-
-        nodeExporter:
-          enabled: true
-          resources:
-            limits:
-              memory: 64Mi
-            requests:
-              cpu: 10m
-              memory: 32Mi
+    repoURL: git@github.com:baranacikgoz/homelab-infra.git
+    targetRevision: main
+    path: clusters/mac-mini/apps/monitoring
 
   destination:
     server: https://kubernetes.default.svc

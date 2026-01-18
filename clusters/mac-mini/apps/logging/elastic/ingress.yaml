@@ -6,11 +6,13 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: nginx
     # Kibana Operator varsayılan olarak HTTPS (Self-Signed) çalışır.
-    # Nginx'e "Arkası HTTPS ama sertifikaya güvenme" diyoruz.
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
     nginx.ingress.kubernetes.io/proxy-ssl-verify: "false"
-    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     nginx.ingress.kubernetes.io/proxy-body-size: "100m"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      proxy_set_header X-Forwarded-Proto https;
 spec:
   ingressClassName: nginx
   rules:

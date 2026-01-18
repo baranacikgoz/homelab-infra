@@ -1,0 +1,10 @@
+apiVersion: v2
+name: redis
+description: Wrapper chart for redis
+type: application
+version: 1.0.0
+appVersion: 1.0.0
+dependencies:
+  - name: redis
+    version: 20.0.0
+    repository: https://charts.bitnami.com/bitnami

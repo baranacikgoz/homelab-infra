@@ -8,9 +8,9 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://helm.elastic.co
-    chart: eck-operator
-    targetRevision: 2.16.1
+    repoURL: git@github.com:baranacikgoz/homelab-infra.git
+    targetRevision: main
+    path: clusters/mac-mini/apps/eck-operator
   destination:
     server: https://kubernetes.default.svc
     namespace: elastic-system

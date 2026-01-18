@@ -17,4 +17,4 @@ spec:
               memory: 256Mi
               cpu: 500m
             limits:
-              memory: 1.5Gi # Tampon payı
+              memory: 1Gi

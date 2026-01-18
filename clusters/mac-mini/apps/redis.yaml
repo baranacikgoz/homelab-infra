@@ -8,35 +8,9 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://charts.bitnami.com/bitnami
-    chart: redis
-    targetRevision: 24.1.0 # Güncel stabil versiyon
-    helm:
-      values: |
-        # Standalone modda, "master" olarak çalışacak
-        architecture: standalone
-
-        # --- OPTİMİZASYON ---
-        # Redis çok hafiftir, 128MB bile çoğu işe yeter
-        master:
-          resources:
-            requests:
-              memory: 64Mi
-              cpu: 50m
-            limits:
-              memory: 256Mi # 256MB RAM limiti
-        # --------------------
-
-        # Şifre yönetimi (Production'da Secret kullanılmalı)
-        auth:
-          enabled: true
-          password: "YourStrongRedisPassword" # Buraya güçlü bir şifre yaz
-          
-        # Disk kalıcılığı
-        master:
-          persistence:
-            enabled: true
-            size: 1Gi # 1GB disk yeterli
+    repoURL: git@github.com:baranacikgoz/homelab-infra.git
+    targetRevision: main
+    path: clusters/mac-mini/apps/redis
 
   destination:
     server: https://kubernetes.default.svc

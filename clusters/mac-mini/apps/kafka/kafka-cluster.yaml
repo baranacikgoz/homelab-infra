@@ -21,13 +21,14 @@ spec:
   resources:
     # --- RAM OPTİMİZASYONU ---
     requests:
-      memory: 384Mi
-      cpu: 250m
-    limits:
       memory: 512Mi
+      cpu: 200m
+    limits:
+      memory: 1Gi
+      cpu: 1000m # Startup boost for ARM64/Java
   jvmOptions:
-    -Xms: 384m
-    -Xmx: 384m
+    -Xms: 512m
+    -Xmx: 512m
 ---
 # Kafka Cluster Config
 apiVersion: kafka.strimzi.io/v1beta2

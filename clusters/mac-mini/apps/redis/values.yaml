@@ -1,0 +1,15 @@
+redis:
+  architecture: standalone
+  master:
+    resources:
+      requests:
+        memory: 64Mi
+        cpu: 50m
+      limits:
+        memory: 256Mi # Small
+    persistence:
+      enabled: true
+      size: 1Gi
+  auth:
+    enabled: true
+    password: "YourStrongRedisPassword"

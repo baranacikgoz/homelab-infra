@@ -8,37 +8,9 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://strimzi.io/charts/
-    chart: strimzi-kafka-operator
-    targetRevision: 0.49.1
-    helm:
-      values: |
-        resources:
-          requests:
-            memory: 256Mi
-            cpu: 250m
-          limits:
-            memory: 512Mi
-            # CPU Limitini 1 Core'a çıkarıyoruz ki açılışta boğulmasın
-            cpu: 1000m 
-
-        livenessProbe:
-          initialDelaySeconds: 60
-          periodSeconds: 20
-        readinessProbe:
-          initialDelaySeconds: 60
-          periodSeconds: 20
-
-        # --- KRİTİK DÜZELTME ---
-        # 1. Blocked Thread Check süresini 2sn'den 60sn'ye çıkarıyoruz.
-        # 2. Garbage Collector'ı optimize ediyoruz.
-        extraEnvs:
-          - name: JAVA_TOOL_OPTIONS
-            value: "-Xms384m -Xmx384m -XX:+UseG1GC -Dvertx.blockedThreadCheckInterval=60000"
-          - name: STRIMZI_RECONCILIATION_INTERVAL_MS
-            value: "120000"
-
-        logLevel: INFO
+    repoURL: git@github.com:baranacikgoz/homelab-infra.git
+    targetRevision: main
+    path: clusters/mac-mini/apps/kafka-operator
   destination:
     server: https://kubernetes.default.svc
     namespace: kafka-system
