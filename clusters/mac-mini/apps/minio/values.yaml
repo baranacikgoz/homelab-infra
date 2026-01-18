@@ -28,8 +28,6 @@ minio:
       nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
       nginx.ingress.kubernetes.io/configuration-snippet: |
         proxy_set_header X-Forwarded-Proto https;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header Host $http_host;
     hosts:
       - minio.baranacikgoz.com
 
@@ -46,7 +44,5 @@ minio:
       nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
       nginx.ingress.kubernetes.io/configuration-snippet: |
         proxy_set_header X-Forwarded-Proto https;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header Host $http_host;
     hosts:
       - minio-console.baranacikgoz.com
