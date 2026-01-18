@@ -52,6 +52,7 @@ vault:
 
   injector:
     enabled: true
+    replicas: 1
     resources:
       requests:
         cpu: 50m
