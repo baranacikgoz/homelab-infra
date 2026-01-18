@@ -14,5 +14,5 @@ spec:
     namespace: argocd
   syncPolicy:
     automated:
-      prune: true # Git'ten silineni Cluster'dan da sil
-      selfHeal: true # Cluster'da elle değiştirileni geri al (Drift Correction)
+      prune: true
+      selfHeal: true

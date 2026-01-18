@@ -1,4 +1,3 @@
-# Kafka Node Pool (Modern Kraft Yapısı)
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaNodePool
 metadata:
@@ -7,7 +6,7 @@ metadata:
   labels:
     strimzi.io/cluster: my-cluster
 spec:
-  replicas: 1 # Tek node yeterli
+  replicas: 1
   roles:
     - controller
     - broker
@@ -16,10 +15,9 @@ spec:
     volumes:
       - id: 0
         type: persistent-claim
-        size: 5Gi # 5GB Disk
+        size: 5Gi
         deleteClaim: false
   resources:
-    # --- RAM OPTİMİZASYONU ---
     requests:
       memory: 512Mi
       cpu: 200m
@@ -30,7 +28,6 @@ spec:
     -Xms: 512m
     -Xmx: 512m
 ---
-# Kafka Cluster Config
 apiVersion: kafka.strimzi.io/v1beta2
 kind: Kafka
 metadata:
@@ -38,7 +35,7 @@ metadata:
   namespace: kafka-system
   annotations:
     strimzi.io/node-pools: enabled
-    strimzi.io/kraft: enabled # Zookeeper YOK!
+    strimzi.io/kraft: enabled
 spec:
   version: 3.8.0
   entityOperator:
@@ -46,7 +43,7 @@ spec:
     userOperator: {}
   kafka:
     listeners:
-      # Sadece cluster içi şifresiz iletişim (En hafifi)
+      # Only internal cluster communication without encryption (Lightest)
       - name: plain
         port: 9092
         type: internal

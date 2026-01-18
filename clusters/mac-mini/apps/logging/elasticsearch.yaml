@@ -9,7 +9,7 @@ spec:
     - name: default
       count: 1
       config:
-        node.store.allow_mmap: false # Mac/Orbstack uyumu için
+        node.store.allow_mmap: false # For Mac/Orbstack compatibility
       podTemplate:
         spec:
           containers:
@@ -22,7 +22,7 @@ spec:
                   memory: 1.5Gi
               env:
                 - name: ES_JAVA_OPTS
-                  value: "-Xms1g -Xmx1g" # Java Heap'i 1GB'a sabitliyoruz
+                  value: "-Xms1g -Xmx1g"
       volumeClaimTemplates:
         - metadata:
             name: elasticsearch-data

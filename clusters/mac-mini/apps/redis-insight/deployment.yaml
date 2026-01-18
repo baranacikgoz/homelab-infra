@@ -19,14 +19,13 @@ spec:
         - name: redis-insight
           image: redis/redisinsight:latest
           imagePullPolicy: IfNotPresent
-          # --- OPTİMİZASYON ---
           resources:
             requests:
               cpu: 100m
               memory: 256Mi
             limits:
               memory: 512Mi
-          # --------------------
+
           ports:
             - containerPort: 8001
               name: http

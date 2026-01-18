@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: git@github.com:baranacikgoz/homelab-infra.git
     targetRevision: main
-    path: clusters/mac-mini/apps/vaultwarden # Az önce dosyaları koyduğumuz yer
+    path: clusters/mac-mini/apps/vaultwarden
   destination:
     server: https://kubernetes.default.svc
     namespace: vaultwarden

@@ -4,7 +4,7 @@ metadata:
   name: cnpg-operator
   namespace: argocd
   annotations:
-    argocd.argoproj.io/sync-wave: "-1" # Önce bu
+    argocd.argoproj.io/sync-wave: "-1" # This first
 spec:
   project: default
   source:

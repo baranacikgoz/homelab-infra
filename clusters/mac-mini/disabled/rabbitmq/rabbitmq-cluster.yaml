@@ -4,22 +4,21 @@ metadata:
   name: main-rabbit
   namespace: rabbitmq-system
 spec:
-  replicas: 1 # Home lab için 1 yeterli
-  image: rabbitmq:3.12-management # Yönetim paneli olan imaj
+  replicas: 1
+  image: rabbitmq:3.12-management # Image with management panel
 
-  # --- OPTİMİZASYON ---
   resources:
     requests:
       cpu: 200m
       memory: 256Mi
     limits:
-      cpu: 1000m # Açılışta işlemciye ihtiyaç duyar
-      memory: 512Mi # 512MB RAM limiti yeterli
-  # --------------------
+      cpu: 1000m # Needs CPU during startup
+      memory: 512Mi
+
 
   persistence:
-    storageClassName: local-path # Veya varsayılan neyse
+    storageClassName: local-path
     storage: 5Gi
 
   service:
-    type: ClusterIP # Dışarıya Ingress veya Port-forward ile erişeceğiz
+    type: ClusterIP # We will access it from outside via Ingress or Port-forward

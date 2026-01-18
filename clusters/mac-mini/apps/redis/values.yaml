@@ -6,7 +6,7 @@ redis:
         memory: 64Mi
         cpu: 50m
       limits:
-        memory: 256Mi # Small
+        memory: 256Mi
     persistence:
       enabled: true
       size: 1Gi

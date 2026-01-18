@@ -8,7 +8,7 @@ metadata:
 spec:
   replicas: 1
   strategy:
-    type: Recreate # SQLite kullandığı için aynı anda iki tane çalışmasın
+    type: Recreate # Since it uses SQLite, don't let two run at the same time
   selector:
     matchLabels:
       app: vaultwarden

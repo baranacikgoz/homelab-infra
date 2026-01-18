@@ -5,12 +5,11 @@ metadata:
   namespace: rabbitmq-system
   annotations:
     kubernetes.io/ingress.class: nginx
-    # RabbitMQ UI HTTP konuşur
     nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
-    # SSL'i Cloudflare'de sonlandırıyoruz, döngü olmasın
+    # We terminate SSL at Cloudflare to avoid loops
     nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
-    # WebSocket desteği (RabbitMQ istatistikleri anlık akar)
+    # WebSocket support (RabbitMQ statistics flow in real-time)
     nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
     nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
 spec:
@@ -23,6 +22,5 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: main-rabbit # Operator bu servisi otomatik oluşturdu
                 port:
-                  number: 15672 # Yönetim paneli portu
+                  number: 15672

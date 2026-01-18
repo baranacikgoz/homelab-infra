@@ -4,7 +4,7 @@ metadata:
   name: main-db
   namespace: database
 spec:
-  instances: 1 # Tek node (Home lab için yeterli)
+  instances: 1
 
   resources:
     requests:
@@ -15,4 +15,4 @@ spec:
 
   storage:
     size: 5Gi
-    storageClass: local-path # OrbStack varsayılanı (veya boş bırak)
+    storageClass: local-path

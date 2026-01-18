@@ -14,7 +14,6 @@ spec:
 
   destination:
     server: https://kubernetes.default.svc
-    # Best Practice: Monitoring araçlarını kendi namespace'ine koyalım
     namespace: monitoring
 
   syncPolicy:
@@ -23,6 +22,5 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
-      # --- KRİTİK AYAR ---
-      # Prometheus CRD'leri çok büyük olduğu için bu ayar olmadan hata alabilirsin
+      # Prometheus CRDs are very large, so you might get an error without this setting
       - ServerSideApply=true
