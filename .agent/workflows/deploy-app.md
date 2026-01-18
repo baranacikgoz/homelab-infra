@@ -14,6 +14,7 @@ Before starting, verify:
 - [ ] You know if the app requires persistent storage (PVC)
 - [ ] You know if the app needs external access (Ingress)
 - [ ] You have identified all required secrets/credentials
+- [ ] **Vault Users**: If using HashiCorp Vault for secrets, see [Vault Sidecar Injection](./vault-sidecar-injection.md)
 
 ## Step 1: Plan Resource Allocation
 
@@ -212,11 +213,11 @@ spec:
       - CreateNamespace=true
 ```
 
-## Step 5: Create Secrets (Out-of-Band)
+## Step 5: Secrets Management
 
+### Option A: Standard Kubernetes Secrets
 **NEVER commit secrets to Git.**
-
-If your app requires secrets, create them manually:
+If your app uses standard secrets, create them manually:
 
 ```bash
 kubectl create secret generic <app-name>-secret \
@@ -226,6 +227,9 @@ kubectl create secret generic <app-name>-secret \
 ```
 
 **OR** add to `scripts/setup-secrets.sh` for automation.
+
+### Option B: Vault-Native Secrets (Recommended Extension)
+If this application will consume secrets from HashiCorp Vault (e.g. for .NET WebAPIs), complete the basic deployment here, then follow the **[/vault-sidecar-injection](./vault-sidecar-injection.md)** workflow as a secondary step to enable sidecar injection.
 
 ## Step 6: Commit and Push
 
