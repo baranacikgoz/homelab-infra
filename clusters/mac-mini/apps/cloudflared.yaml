@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: git@github.com:baranacikgoz/homelab-infra.git
     targetRevision: main
-    path: clusters/mac-mini/apps/cloudflared-resources
+    path: clusters/mac-mini/apps/cloudflared
   destination:
     server: https://kubernetes.default.svc
     namespace: ingress

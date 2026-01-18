@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: kafka-cluster
+  name: database
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: "1"
@@ -10,10 +10,10 @@ spec:
   source:
     repoURL: git@github.com:baranacikgoz/homelab-infra.git
     targetRevision: main
-    path: clusters/mac-mini/apps/kafka
+    path: clusters/mac-mini/apps/database
   destination:
     server: https://kubernetes.default.svc
-    namespace: kafka-system
+    namespace: database
   syncPolicy:
     automated:
       prune: true

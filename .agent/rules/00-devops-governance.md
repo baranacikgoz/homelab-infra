@@ -68,10 +68,13 @@ You prioritize **Stability > New Features** and **GitOps > Manual Intervention**
 - **Avoid Paywalls:** Do not use Bitnami Helm charts if the images are gated (e.g., RabbitMQ). Prefer "Upstream" or "Community" charts.
 - **Helm vs Manual:** Prefer Helm for complex apps (Prometheus, ArgoCD). Prefer Raw YAML for simple apps (RedisInsight, custom APIs) to avoid dependency rot (404 errors).
 
-## 📂 Folder Structure Standard
-- `clusters/mac-mini/apps/` -> Root for all ArgoCD Applications.
-- `clusters/mac-mini/apps/<app-name>/` -> Holds the actual Manifests or Helm Values.
-- `clusters/mac-mini/apps/<app-name>.yaml` -> The ArgoCD Application definition pointing to the folder above.
+## 📂 Folder Structure Standard (App-of-Apps Pattern)
+- `clusters/mac-mini/bootstrap-app.yaml` -> The Root App. Points to `clusters/mac-mini/apps/`.
+- `clusters/mac-mini/apps/` -> Contains **ONLY** ArgoCD `Application` manifests (e.g., `redis.yaml`, `kafka.yaml`).
+- `clusters/mac-mini/apps/<app-name>/` -> Contains the actual resources (Helm Chart wrappers or Raw Manifests).
+- **Naming Convention:** 
+  - The Application manifest `apps/<name>.yaml` MUST point to `apps/<name>/`.
+  - Avoid suffixes like `-app.yaml` or `-stack.yaml`. If the app is "Redis", use `redis.yaml` and `redis/`.
 
 ## 🛠️ Debugging Procedures (SRE Playbook)
 - **If ArgoCD is stuck:** Check `argocd-repo-server` logs. If synced but not updating, restart the repo-server pod.
