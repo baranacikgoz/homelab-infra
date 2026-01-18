@@ -444,19 +444,19 @@ kubectl get pods -A
 
 | Application | Namespace | Purpose | Ingress URL |
 |------------|-----------|---------|-------------|
-| **ArgoCD** | `argocd` | GitOps controller | `https://argocd.baranacikgoz.com` |
+| **ArgoCD** | `argocd` | GitOps controller | `https://argocd.yourdomain.com` |
 | **Nginx Ingress** | `ingress` | Reverse proxy & load balancer | N/A |
 | **Metrics Server** | `kube-system` | Resource metrics (kubectl top) | N/A |
-| **Prometheus** | `monitoring` | Metrics collection | `https://prometheus.baranacikgoz.com` |
-| **Grafana** | `monitoring` | Metrics visualization | `https://grafana.baranacikgoz.com` |
+| **Prometheus** | `monitoring` | Metrics collection | `https://prometheus.yourdomain.com` |
+| **Grafana** | `monitoring` | Metrics visualization | `https://grafana.yourdomain.com` |
 | **Redis** | `database` | In-memory cache | Internal only |
-| **RedisInsight** | `database` | Redis GUI | `https://redis.baranacikgoz.com` |
+| **RedisInsight** | `database` | Redis GUI | `https://redis.yourdomain.com` |
 | **PostgreSQL** | `database` | Relational database (CNPG) | Internal only |
-| **MinIO** | `minio` | S3-compatible object storage | `https://minio.baranacikgoz.com` |
+| **MinIO** | `minio` | S3-compatible object storage | `https://minio.yourdomain.com` |
 | **Kafka** | `kafka` | Event streaming (Strimzi) | Internal only |
 | **Elasticsearch** | `logging` | Log aggregation (ECK) | Internal only |
-| **Kibana** | `logging` | Log visualization | `https://kibana.baranacikgoz.com` |
-| **Vaultwarden** | `vaultwarden` | Password manager (Bitwarden compatible) | `https://passwords.baranacikgoz.com` |
+| **Kibana** | `logging` | Log visualization | `https://kibana.yourdomain.com` |
+| **Vaultwarden** | `vaultwarden` | Password manager (Bitwarden compatible) | `https://passwords.yourdomain.com` |
 | **Cloudflared** | `cloudflare` | Tunnel for external HTTPS access | N/A |
 
 ---
@@ -637,7 +637,7 @@ kubectl get pods -n default -w
 
 ### Prometheus Metrics
 
-Access Prometheus at `https://prometheus.baranacikgoz.com` (or via port-forward):
+Access Prometheus at `https://prometheus.yourdomain.com` (or via port-forward):
 
 ```bash
 kubectl port-forward -n monitoring svc/kube-prometheus-stack-prometheus 9090:9090
@@ -651,7 +651,7 @@ kubectl port-forward -n monitoring svc/kube-prometheus-stack-prometheus 9090:909
 
 ### Grafana Dashboards
 
-Access Grafana at `https://grafana.baranacikgoz.com`:
+Access Grafana at `https://grafana.yourdomain.com`:
 
 **Default Credentials** (from `scripts/setup-secrets.sh`):
 - Username: `admin`
@@ -667,7 +667,7 @@ Access Grafana at `https://grafana.baranacikgoz.com`:
 
 ### Kibana Logs
 
-Access Kibana at `https://kibana.baranacikgoz.com` for centralized log analysis.
+Access Kibana at `https://kibana.yourdomain.com` for centralized log analysis.
 
 ---
 

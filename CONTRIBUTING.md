@@ -355,7 +355,7 @@ Before submitting a PR, test your changes:
 
 6. **Test Ingress** (if applicable):
    ```bash
-   curl -I https://your-app.baranacikgoz.com
+   curl -I https://your-app.yourdomain.com
    # HTTP 200 OK (no redirect loops)
    ```
 
