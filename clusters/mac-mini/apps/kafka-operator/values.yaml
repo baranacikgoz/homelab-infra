@@ -1,10 +1,10 @@
 strimzi-kafka-operator:
   resources:
     requests:
-      memory: 128Mi
+      memory: 256Mi
       cpu: 100m
     limits:
-      memory: 256Mi
+      memory: 512Mi
       cpu: 1000m # Startup boost
 
   livenessProbe:
@@ -16,7 +16,7 @@ strimzi-kafka-operator:
 
   extraEnvs:
     - name: JAVA_TOOL_OPTIONS
-      value: "-Xms128m -Xmx192m -XX:+UseG1GC -Dvertx.blockedThreadCheckInterval=60000"
+      value: "-Xms256m -Xmx384m -XX:+UseG1GC -Dvertx.blockedThreadCheckInterval=60000"
     - name: STRIMZI_RECONCILIATION_INTERVAL_MS
       value: "120000"
 
