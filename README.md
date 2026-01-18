@@ -49,7 +49,7 @@ Most homelab tutorials focus on "getting things running." This project focuses o
 
 Why run Kafka, Elasticsearch, and a full GitOps pipeline for a handful of home services? 
 
-1. **Big Tech Skillset**: Managing a simple Docker-compose file doesn't teach you about Kafka partition balancing, Elasticsearch heap management, or ArgoCD sync waves. This repo does.
+1. **Exposure to Scale Concepts**: While a homelab isn't a replacement for production-at-scale, this repository provides a playground to explore concepts like Kafka partition balancing, Elasticsearch heap management, and ArgoCD sync waves—complexities and etc. rarely encountered in simpler setups.
 2. **Constraint-Driven Excellence**: Running a "heavy" stack on a resource limited home server forces disciplined resource management. If it works here with tight limits, it will fly in the cloud.
 3. **Infrastructure as Code (IaC) Mastery**: By treating a homelab as a mission-critical production environment, we build the muscle memory required for professional SRE roles.
 4. **Learning through Complexity**: The goal isn't just to host apps; it's to learn how to fix them when they break under the weight of their own complexity.
