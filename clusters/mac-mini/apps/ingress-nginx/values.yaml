@@ -6,6 +6,11 @@ ingress-nginx:
       default: true
     watchIngressWithoutClass: true
     
+    # Validation Webhook causes deadlocks if certs rot. 
+    # Disabling it for stability in Home Lab.
+    admissionWebhooks:
+      enabled: false
+    
     config:
       use-forwarded-headers: "true"
       compute-full-forwarded-for: "true"
