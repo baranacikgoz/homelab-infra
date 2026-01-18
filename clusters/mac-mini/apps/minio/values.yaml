@@ -15,7 +15,7 @@ minio:
 
   environment:
     MINIO_SERVER_URL: "https://minio.baranacikgoz.com"
-    MINIO_BROWSER_REDIRECT_URL: "https://console.minio.baranacikgoz.com"
+    MINIO_BROWSER_REDIRECT_URL: "https://minio-console.baranacikgoz.com"
 
   ingress:
     enabled: true
@@ -49,4 +49,4 @@ minio:
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header Host $http_host;
     hosts:
-      - console.minio.baranacikgoz.com
+      - minio-console.baranacikgoz.com
