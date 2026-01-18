@@ -11,7 +11,7 @@ spec:
     path: clusters/mac-mini/apps/vaultwarden # Az önce dosyaları koyduğumuz yer
   destination:
     server: https://kubernetes.default.svc
-    namespace: homelab
+    namespace: vaultwarden
   syncPolicy:
     automated:
       prune: true

@@ -67,14 +67,21 @@ GRAFANA_PASS=$(generate_password)
 create_secret_if_missing "monitoring" "grafana-secret" "admin-user=${GRAFANA_USER} admin-password=${GRAFANA_PASS}"
 
 # -----------------------------------------------------------------------------
+# 4. VAULTWARDEN (Namespace: vaultwarden)
+# -----------------------------------------------------------------------------
+VAULTWARDEN_TOKEN=$(generate_password)
+create_secret_if_missing "vaultwarden" "vaultwarden-secret" "adminToken=${VAULTWARDEN_TOKEN}"
+
+# -----------------------------------------------------------------------------
 # OUTPUT SUMMARY
 # -----------------------------------------------------------------------------
 echo -e "\n${GREEN}=== Secrets Configured Successfully ===${NC}"
 echo "Use the following credentials (SAVE THEM NOW, they won't be shown again if secrets exist):"
 echo "----------------------------------------------------------------"
-echo "Redis    (database/redis-secret)   : ${REDIS_PASS}"
-echo "MinIO    (minio/minio-secret)      : ${MINIO_user} / ${MINIO_PASS}"
-echo "Grafana  (monitoring/grafana-secret): ${GRAFANA_USER} / ${GRAFANA_PASS}"
+echo "Redis       (database/redis-secret)      : ${REDIS_PASS}"
+echo "MinIO       (minio/minio-secret)         : ${MINIO_user} / ${MINIO_PASS}"
+echo "Grafana     (monitoring/grafana-secret)  : ${GRAFANA_USER} / ${GRAFANA_PASS}"
+echo "Vaultwarden (vaultwarden/vaultwarden-secret): Admin Token: ${VAULTWARDEN_TOKEN}"
 echo "----------------------------------------------------------------"
 echo -e "${YELLOW}Note: If secrets already existed, the values above are NEWly generated and NOT what is in the cluster.${NC}"
 echo -e "${YELLOW}To view existing secrets: kubectl get secret <name> -n <ns> -o go-template='{{.data.<key> | base64decode}}'${NC}"

@@ -11,7 +11,7 @@ spec:
     path: clusters/mac-mini/apps/minio
   destination:
     server: https://kubernetes.default.svc
-    namespace: homelab
+    namespace: minio
   syncPolicy:
     automated:
       prune: true

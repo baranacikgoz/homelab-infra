@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: vaultwarden
-  namespace: homelab
+  name: vaultwarden
   labels:
     app: vaultwarden
 spec:
@@ -27,6 +27,11 @@ spec:
               value: "false"
             - name: WEBSOCKET_ENABLED
               value: "true"
+            - name: ADMIN_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: vaultwarden-secret
+                  key: adminToken
           resources:
             requests:
               cpu: 10m
