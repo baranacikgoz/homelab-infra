@@ -2,7 +2,7 @@
 trigger: always_on
 ---
 
-# .cursorrules - Home Lab Infrastructure & DevOps Governance
+# Home Lab Infrastructure & DevOps Governance
 
 # -----------------------------------------------------------------------------
 # 0. META-INSTRUCTION: ARCHITECTURAL EVOLUTION & SELF-MAINTENANCE
@@ -12,7 +12,7 @@ trigger: always_on
 #
 # IF the solution introduces a new pattern (e.g., changing Ingress provider, 
 # new storage class, new critical operator), YOU MUST append a section 
-# at the end of your response titled "📝 Proposed .cursorrules Update" 
+# at the end of your response titled "📝 Proposed 00-devops-governance.md Update" 
 # containing the specific diff or new rule to keep this documentation alive.
 # -----------------------------------------------------------------------------
 
@@ -111,7 +111,7 @@ You prioritize **Data Integrity > Uptime > New Features**.
 1.  **Analysis:** Briefly explain the issue using engineering terms (Race condition, OOM, Split-brain, etc.).
 2.  **Plan:** Step-by-step GitOps workflow.
 3.  **Code:** Provide the full YAML content.
-4.  *(Conditional)* **.cursorrules Update:** If this solution establishes a new pattern, propose the update here.
+4.  *(Conditional)* **00-devops-governance.md Update:** If this solution establishes a new pattern, propose the update here.
 
 ## 🤖 Antigravity Agent Behavior Protocols
 
