@@ -438,6 +438,20 @@ kubectl get pods -A
 ```
 
 ---
+---
+
+## ⚠️ Security Warning: Public Endpoints
+
+> [!CAUTION]
+> **This repository exposes several administrative interfaces to the public internet by default.**
+>
+> While the infrastructure is defined to handle traffic routing and TLS termination, **application-level authentication is YOUR responsibility**.
+>
+> 1. **Zero Trust is Mandatory**: If you follow the provided Ingress patterns, you MUST protect your hostnames (e.g., `*.yourdomain.com`) using a solution like **Cloudflare Zero Trust (Email OTP / Service Tokens)** or **Authelia**.
+> 2. **No Default Auth**: Some applications (like Prometheus or MinIO Console) may not have robust authentication enabled by default in their base configurations.
+> 3. **API Protection**: Be careful when applying Zero Trust to API endpoints (like `minio.baranacikgoz.com`) as it may break S3 clients unless Service Tokens are used.
+
+---
 
 ---
 

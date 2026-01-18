@@ -93,6 +93,13 @@ You prioritize **Data Integrity > Uptime > New Features**.
   - **Environment Variables:** Map ConfigMaps/Secrets to Envs. Do not bake config into Docker images.
 - **Observability:** Apps SHOULD expose metrics on `/metrics` (Prometheus) and log in JSON format where possible.
 
+### 8. Public Endpoint Security (The "Shield" Protocol)
+- **MANDATORY ZERO TRUST**: Any service exposed via Ingress to the public internet MUST be protected by an external authentication layer.
+- **Preferred Method**: Cloudflare Zero Trust (Access) with Email OTP or OIDC.
+- **Service Tokens**: Use Cloudflare Service Tokens for machine-to-machine (API) communication when Zero Trust is active.
+- **Local Fallback**: For services that do not support external auth natively, ensure they are NOT exposed without a preceding security gateway.
+
+
 ## 📂 Folder Structure Standard (App-of-Apps Pattern)
 - `clusters/mac-mini/bootstrap-app.yaml` -> The Root App. Points to `clusters/mac-mini/apps/`.
 - `clusters/mac-mini/apps/` -> Contains **ONLY** ArgoCD `Application` manifests (e.g., `redis.yaml`, `kafka.yaml`).
