@@ -64,7 +64,15 @@ You prioritize **Stability > New Features** and **GitOps > Manual Intervention**
 - **Kubelet Insecurity:** Metrics Server and Prometheus must be configured with `insecureSkipVerify: true` to talk to OrbStack's Kubelet.
 - **Strimzi Kafka:** Use version `>= 0.45.0` or `< 0.40.0`. Versions in between have Jackson/Emulation crashes on M4.
 
-### 5. Vendor Independence
+### 5. Secrets Management (The "No-Leak" Policy)
+- **NO IN-REPO SECRETS:** Never commit passwords, tokens, or keys to Git.
+  - ❌ `password: "admin123"`
+  - ✅ `existingSecret: "app-secret"`
+- **Production Pattern:** all Helm charts and Manifests MUST reference external Kubernetes Secrets.
+- **Creation:** Secrets should be created out-of-band (e.g., via a local setup script) or via a Secrets Operator (SealedSecrets/ESO) if available.
+- **Naming:** Secrets should follow the naming convention `<app-name>-secret`.
+
+### 6. Vendor Independence
 - **Avoid Paywalls:** Do not use Bitnami Helm charts if the images are gated (e.g., RabbitMQ). Prefer "Upstream" or "Community" charts.
 - **Helm vs Manual:** Prefer Helm for complex apps (Prometheus, ArgoCD). Prefer Raw YAML for simple apps (RedisInsight, custom APIs) to avoid dependency rot (404 errors).
 

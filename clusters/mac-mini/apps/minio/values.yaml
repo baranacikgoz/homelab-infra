@@ -9,8 +9,9 @@ minio:
       memory: 512Mi
   persistence:
     size: 10Gi
-  rootUser: "admin"
-  rootPassword: "changeme123"
+  # Security Rule: No In-Repo Secrets
+  # Secret must be created manually: kubectl create secret generic minio-secret --from-literal=rootUser=admin --from-literal=rootPassword=...
+  existingSecret: "minio-secret"
 
   environment:
     MINIO_SERVER_URL: "https://minio.baranacikgoz.com"

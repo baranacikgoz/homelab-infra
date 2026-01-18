@@ -12,4 +12,7 @@ redis:
       size: 1Gi
   auth:
     enabled: true
-    password: "YourStrongRedisPassword"
+    # Security Rule: No In-Repo Secrets
+    # Secret must be created manually: kubectl create secret generic redis-secret --from-literal=password=...
+    existingSecret: "redis-secret"
+    existingSecretPasswordKey: "password"

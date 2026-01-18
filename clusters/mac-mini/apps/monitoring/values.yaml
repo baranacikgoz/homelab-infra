@@ -1,6 +1,11 @@
 kube-prometheus-stack:
   grafana:
-    adminPassword: "change-this-password123"
+    # Security Rule: No In-Repo Secrets
+    # Secret must be created manually: kubectl create secret generic grafana-secret --from-literal=admin-user=admin --from-literal=admin-password=...
+    admin:
+      existingSecret: "grafana-secret"
+      userKey: "admin-user"
+      passwordKey: "admin-password"
     resources:
       limits:
         memory: 256Mi
