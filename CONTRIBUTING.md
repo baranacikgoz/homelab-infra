@@ -391,9 +391,9 @@ docker inspect your-image:tag | grep Architecture
 
 When adding a new feature, update:
 
-1. **README.md**: Add to "Deployed Applications" table
-2. **Inline comments**: Explain non-obvious configurations
-3. **Workflow docs**: If introducing a new pattern, add to `.agent/workflows/`
+1. **README.md**: Add new services to "Deployed Applications" and ensure the "Big Tech Simulation" narrative remains accurate.
+2. **Inline comments**: Explain non-obvious configurations.
+3. **Workflow docs**: If introducing a new pattern, add to `.agent/workflows/`.
 
 ### Documentation Style
 

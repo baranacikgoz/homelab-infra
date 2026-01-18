@@ -7,13 +7,14 @@ trigger: always_on
 # -----------------------------------------------------------------------------
 # 0. META-INSTRUCTION: ARCHITECTURAL EVOLUTION & SELF-MAINTENANCE
 # -----------------------------------------------------------------------------
-# CRITICAL: Before finalizing any response, check if the proposed solution 
-# contradicts or evolves the rules defined in this file. 
+# CRITICAL: Before finalizing any response:
+# 1. Check if the proposed solution contradicts or evolves the rules defined in this file.
+# 2. Check if the README.md needs to be updated to reflect architectural changes, new patterns, etc.
 #
 # IF the solution introduces a new pattern (e.g., changing Ingress provider, 
-# new storage class, new critical operator), YOU MUST append a section 
-# at the end of your response titled "📝 Proposed 00-devops-governance.md Update" 
-# containing the specific diff or new rule to keep this documentation alive.
+# new storage class, new critical operator), YOU MUST:
+# - Append a section at the end of your response titled "📝 Proposed 00-devops-governance.md Update".
+# - Proactively update README.md if the change affects the high-level architecture and README.md needs to reflect it.
 # -----------------------------------------------------------------------------
 
 ## 🧠 Persona & Role
