@@ -1,10 +1,10 @@
-# 🏡 Homelab Infrastructure
+# 🏡 Homelab Infrastructure: Big Tech Simulation
 
-> **Production-Grade GitOps Patterns for Kubernetes Homelabs**
+> **Intentional Overengineering: Enterprise-Grade GitOps Patterns for the Curious SRE**
 
-A complete infrastructure-as-code repository demonstrating **enterprise-grade DevOps practices** adapted for homelab environments. Everything is managed through GitOps principles using ArgoCD, prioritizing **Data Integrity > Uptime > New Features**.
+A high-fidelity **Big Tech Stack Simulation** demonstrating enterprise-grade DevOps practices on residential hardware. This repository is intentionally overengineered (for a homelab) to practice managing production-scale complexity within the tight constraints of a home server, prioritizing **Data Integrity > Uptime > New Features**.
 
-This repository is **platform-agnostic** - while currently deployed on a Mac Mini M4, the patterns and practices apply to any Kubernetes environment.
+This repository is **platform-agnostic** - while I deployed it on a Mac Mini M4, the patterns and practices are designed to be portable to any Kubernetes environment.
 
 [![GitOps](https://img.shields.io/badge/GitOps-Enabled-blue)](https://www.gitops.tech/)
 [![Kubernetes](https://img.shields.io/badge/Kubernetes-Platform_Agnostic-326CE5)](https://kubernetes.io/)
@@ -15,21 +15,15 @@ This repository is **platform-agnostic** - while currently deployed on a Mac Min
 ## 📋 Table of Contents
 
 - [Overview](#-overview)
+- [The Philosophy of Intentional Overengineering](#-the-philosophy-of-intentional-overengineering)
 - [Architecture](#-architecture)
 - [Tech Stack](#-tech-stack)
 - [Prerequisites](#-prerequisites)
 - [Getting Started](#-getting-started)
-  - [1. Prepare Your Kubernetes Cluster](#1-prepare-your-kubernetes-cluster)
-  - [2. Install kubectl](#2-install-kubectl-if-not-already-installed)
-  - [3. Bootstrap ArgoCD](#3-bootstrap-argocd)
-  - [4. Create Secrets](#4-create-secrets)
-  - [5. Deploy Applications](#5-deploy-applications)
 - [Deployed Applications](#-deployed-applications)
 - [Governance & Standards](#-governance--standards)
-- [Deploying New Applications](#-deploying-new-applications)
 - [Monitoring & Observability](#-monitoring--observability)
 - [Troubleshooting](#-troubleshooting)
-- [Contributing](#-contributing)
 - [License](#-license)
 
 ---
@@ -38,18 +32,27 @@ This repository is **platform-agnostic** - while currently deployed on a Mac Min
 
 ## 🎯 Overview
 
-This repository showcases **production-grade infrastructure patterns** that bring enterprise DevOps standards to homelab environments. It's a complete, working example of infrastructure-as-code that you can adapt to your own setup.
+This repository showcases **production-grade infrastructure patterns** that bring enterprise DevOps standards to homelab environments. It is more than just a setup; it is a **simulated production environment** designed for learning how to manage complex, stateful systems at scale.
 
 ### What Makes This Different?
 
-Most homelab tutorials focus on "getting something running." This project demonstrates:
+Most homelab tutorials focus on "getting things running." This project focuses on **getting things right** by simulating the challenges of a Big Tech infrastructure:
 
-- 🏗 **Production Patterns at Scale-Down**: Enterprise practices (GitOps, health checks, resource limits) adapted for resource-constrained environments
-- 📜 **Governance-First**: Every deployment follows documented standards (see [`.agent/rules/00-devops-governance.md`](.agent/rules/00-devops-governance.md))
-- 🔒 **Security by Design**: No secrets in Git, secrets management with external Kubernetes Secrets
-- 🎯 **Resource Management**: T-Shirt sizing system for predictable capacity planning
-- 📊 **Full Observability**: Prometheus + Grafana + ELK stack integrated from day one
-- 🚫 **Zero-Downtime Philosophy**: Rolling updates with health checks, even on single-node clusters
+- 🏗 **Production Patterns at Scale-Down**: Enterprise practices (GitOps, health checks, resource limits) adapted for resource-constrained environments.
+- 📜 **Governance-First**: Every deployment follows documented standards (see [`.agent/rules/00-devops-governance.md`](.agent/rules/00-devops-governance.md)).
+- 🔒 **Security by Design**: No secrets in Git, secrets management with external Kubernetes Secrets.
+- 🎯 **Resource Management**: T-Shirt sizing system for predictable capacity planning.
+- 📊 **Full Observability**: Prometheus + Grafana + ELK stack integrated from day one.
+- 🚫 **Zero-Downtime Philosophy**: Rolling updates with health checks, even on single-node clusters.
+
+## 🧠 The Philosophy of Intentional Overengineering
+
+Why run Kafka, Elasticsearch, and a full GitOps pipeline for a handful of home services? 
+
+1. **Big Tech Skillset**: Managing a simple Docker-compose file doesn't teach you about Kafka partition balancing, Elasticsearch heap management, or ArgoCD sync waves. This repo does.
+2. **Constraint-Driven Excellence**: Running a "heavy" stack on a resource limited home server forces disciplined resource management. If it works here with tight limits, it will fly in the cloud.
+3. **Infrastructure as Code (IaC) Mastery**: By treating a homelab as a mission-critical production environment, we build the muscle memory required for professional SRE roles.
+4. **Learning through Complexity**: The goal isn't just to host apps; it's to learn how to fix them when they break under the weight of their own complexity.
 
 ### My Current Deployment
 
@@ -165,11 +168,13 @@ In my Mac Mini M4 deployment:
 - **Ingress**: [Nginx Ingress Controller](https://kubernetes.github.io/ingress-nginx/) - HTTP/HTTPS routing
 - **Metrics**: [Metrics Server](https://github.com/kubernetes-sigs/metrics-server) - Resource usage (`kubectl top`)
 
-### Data & Messaging
-- **Cache**: [Redis](https://redis.io/) - In-memory data store
-- **Database**: [PostgreSQL](https://www.postgresql.org/) via [CloudNativePG Operator](https://cloudnative-pg.io/)
-- **Object Storage**: [MinIO](https://min.io/) - S3-compatible storage
-- **Message Queue**: [Apache Kafka](https://kafka.apache.org/) via [Strimzi Operator](https://strimzi.io/)
+### Data & Messaging (The Simulation Core)
+These tools are chosen specifically to simulate the complexity of a Big Tech data plane, providing hands-on experience with production-grade operators.
+
+- **Cache**: [Redis](https://redis.io/) - In-memory data store for performance critical paths.
+- **Database**: [PostgreSQL](https://www.postgresql.org/) via [CloudNativePG Operator](https://cloudnative-pg.io/) - Enterprise-grade SQL management.
+- **Object Storage**: [MinIO](https://min.io/) - S3-compatible storage for cloud-native applications.
+- **Message Queue**: [Apache Kafka](https://kafka.apache.org/) via [Strimzi Operator](https://strimzi.io/) - The gold standard for event-driven architectures.
 
 ### Observability
 - **Metrics**: [Prometheus](https://prometheus.io/) - Time-series metrics collection
@@ -209,18 +214,6 @@ In my specific deployment, I also use:
   - Homelab: Cloudflare Tunnel (zero port-forwarding)
 - **Persistent Storage**: StorageClass with dynamic provisioning (for stateful apps)
 - **Git Hosting**: GitHub/GitLab account to fork and customize this repo
-
-### My Setup (Mac Mini M4) - For Reference
-
-If you want to replicate my exact environment:
-- **Hardware**: Mac Mini M4 (16GB RAM, Apple Silicon/ARM64)
-- **Software**:
-  - **macOS**: 13.0+ (Ventura or later)
-  - **OrbStack**: [Download](https://orbstack.dev/download) - Lightweight K8s for Mac
-  - **kubectl**: `brew install kubectl`
-  - **OpenSSL**: Pre-installed on macOS (for secret generation)
-
-**Note**: ARM64 image compatibility is a consideration for my setup. If you're on amd64/x86_64, you have wider image availability.
 
 ---
 
@@ -470,7 +463,7 @@ kubectl get pods -A
 
 ## 📜 Governance & Standards
 
-This project follows strict production-grade DevOps standards documented in [`.agent/rules/00-devops-governance.md`](.agent/rules/00-devops-governance.md).
+This project follows strict production-grade DevOps standards documented in [`.agent/rules/00-devops-governance.md`](.agent/rules/00-devops-governance.md). These rules are not just "best practices"—they are the **guardrails of the simulation**, ensuring that we treat residential hardware with the same discipline as a multi-region cloud deployment.
 
 ### Core Principles
 
