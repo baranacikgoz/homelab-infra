@@ -16,6 +16,8 @@ minio:
   environment:
     MINIO_SERVER_URL: "https://minio.baranacikgoz.com"
     MINIO_BROWSER_REDIRECT_URL: "https://minio-console.baranacikgoz.com"
+    MINIO_ROOT_USER_FILE: ""
+    MINIO_ROOT_PASSWORD_FILE: ""
 
   ingress:
     enabled: true
