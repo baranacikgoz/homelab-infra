@@ -18,8 +18,8 @@ RED='\033[0;31m'
 NC='\033[0m'
 
 generate_password() {
-    # Strip any potential newlines/whitespace from openssl output
-    openssl rand -base64 16 | tr -d '\n '
+    # Using hex avoids padding (==) and special characters (+, /)
+    openssl rand -hex 20
 }
 
 create_secret_if_missing() {
