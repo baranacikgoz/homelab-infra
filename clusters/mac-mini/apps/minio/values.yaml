@@ -14,7 +14,7 @@ minio:
   existingSecret: "minio-secret"
 
   environment:
-    MINIO_SERVER_URL: "https://minio.baranacikgoz.com"
+    MINIO_SERVER_URL: "http://minio.minio.svc.cluster.local:9000"
     MINIO_BROWSER_REDIRECT_URL: "https://minio-console.baranacikgoz.com"
 
   ingress:
