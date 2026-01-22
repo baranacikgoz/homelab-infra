@@ -18,7 +18,8 @@ RED='\033[0;31m'
 NC='\033[0m'
 
 generate_password() {
-    openssl rand -base64 16
+    # Strip any potential newlines/whitespace from openssl output
+    openssl rand -base64 16 | tr -d '\n '
 }
 
 create_secret_if_missing() {
@@ -36,12 +37,12 @@ create_secret_if_missing() {
         return 1 # Indicate existing
     else
         echo -e "${YELLOW}Creating secret '${secret_name}'...${NC}"
-        # Construct command
-        local cmd="kubectl create secret generic $secret_name -n $namespace"
+        # Construct the arguments array to avoid shell splitting issues
+        local args=()
         for literal in $literals; do
-            cmd="$cmd --from-literal=$literal"
+            args+=(--from-literal="$literal")
         done
-        eval "$cmd"
+        kubectl create secret generic "$secret_name" -n "$namespace" "${args[@]}"
         echo -e "${GREEN}✓ Created secret '${secret_name}'${NC}"
         return 0 # Indicate created
     fi
