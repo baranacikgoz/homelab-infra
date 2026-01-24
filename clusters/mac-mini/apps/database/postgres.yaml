@@ -8,7 +8,7 @@ spec:
   
   # Allow traffic from all pods in the cluster (e.g. Ingress/Cloudflared)
   pg_hba:
-    - host all all all scramble-sha-256
+    - host all all all scram-sha-256
 
   resources:
     requests:
