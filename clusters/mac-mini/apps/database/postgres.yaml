@@ -5,6 +5,10 @@ metadata:
   namespace: database
 spec:
   instances: 1
+  
+  # Allow traffic from all pods in the cluster (e.g. Ingress/Cloudflared)
+  pg_hba:
+    - host all all all scramble-sha-256
 
   resources:
     requests:
