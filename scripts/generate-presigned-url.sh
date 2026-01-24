@@ -1,7 +1,19 @@
 #!/bin/bash
-# -----------------------------------------------------------------------------
-# MinIO S3v4 Presigned URL Generator (Bash Implementation)
-# -----------------------------------------------------------------------------
+
+# Required parameters:
+# @raycast.schemaVersion 1
+# @raycast.title Generate MinIO Presigned URL
+# @raycast.mode compact
+# @raycast.packageName Homelab
+
+# Optional parameters:
+# @raycast.icon 🔗
+# @raycast.argument1 { "type": "text", "placeholder": "Object Name" }
+# @raycast.argument2 { "type": "text", "placeholder": "Content Type (e.g. video/mp4)" }
+# @raycast.argument3 { "type": "text", "placeholder": "Bucket Name", "optional": true }
+
+# Documentation:
+# @raycast.description Generates a presigned URL for MinIO and copies it to clipboard
 
 set -e
 
@@ -18,7 +30,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 if [ -f "$SCRIPT_DIR/.env" ]; then
     source "$SCRIPT_DIR/.env"
 else
-    echo "Error: .env file not found in $SCRIPT_DIR"
+    echo "❌ Error: .env file not found"
     exit 1
 fi
 
@@ -27,52 +39,24 @@ ACCESS_KEY=${MINIO_ROOT_USER}
 SECRET_KEY=${MINIO_ROOT_PASSWORD}
 
 if [ -z "$ACCESS_KEY" ] || [ -z "$SECRET_KEY" ]; then
-    echo "Error: MINIO_ROOT_USER and MINIO_ROOT_PASSWORD must be defined in .env"
+    echo "❌ Error: MINIO_ROOT_USER and MINIO_ROOT_PASSWORD must be defined in .env"
     exit 1
 fi
 
-# Usage
-usage() {
-    echo "Usage: $0 <object_name> --type <content_type> [--bucket <bucket_name>]"
-    echo "Example: $0 test.mp4 --type video/mp4"
-    exit 1
-}
-
 # Arguments
-OBJECT_NAME=""
-CONTENT_TYPE=""
-BUCKET_NAME="dev-memory-stream"
-
-while [[ $# -gt 0 ]]; do
-    case $1 in
-        --type)
-            CONTENT_TYPE="$2"
-            shift 2
-            ;;
-        --bucket)
-            BUCKET_NAME="$2"
-            shift 2
-            ;;
-        *)
-            if [ -z "$OBJECT_NAME" ]; then
-                OBJECT_NAME="$1"
-                shift
-            else
-                usage
-            fi
-            ;;
-    esac
-done
+OBJECT_NAME="$1"
+CONTENT_TYPE="$2"
+BUCKET_NAME="${3:-dev-memory-stream}"
 
 if [ -z "$OBJECT_NAME" ] || [ -z "$CONTENT_TYPE" ]; then
-    usage
+    echo "❌ Error: Missing arguments"
+    exit 1
 fi
 
 # Time setup (ISO8601)
 DATE_TIME=$(date -u +'%Y%m%dT%H%M%SZ')
 DATE_ONLY=$(date -u +'%Y%m%d')
 
-# HMAC-SHA256 helper
 # HMAC-SHA256 helper for hex (input key is string, output is hex)
 hmac_sha256_hex() {
     local key="$1"
@@ -121,20 +105,5 @@ SIGNATURE=$(echo -ne "$STRING_TO_SIGN" | openssl dgst -sha256 -mac HMAC -macopt 
 # 5. Output
 URL="https://${ENDPOINT}${CANONICAL_URI}?${CANONICAL_QUERY_STRING}&X-Amz-Signature=${SIGNATURE}"
 
-CF_HEADERS=""
-if [ -n "$CF_ACCESS_CLIENT_ID" ] && [ -n "$CF_ACCESS_CLIENT_SECRET" ]; then
-    CF_HEADERS="-H 'CF-Access-Client-Id: ${CF_ACCESS_CLIENT_ID}' -H 'CF-Access-Client-Secret: ${CF_ACCESS_CLIENT_SECRET}'"
-fi
-
-echo -e "\nGenerated Presigned URL for $BUCKET_NAME/$OBJECT_NAME (Valid for 1 hour):"
-echo "--------------------------------------------------------------------------------"
-echo "$URL"
-echo "--------------------------------------------------------------------------------"
-echo -e "\nYou can test this with curl (verbose mode to see errors):"
-
-if [ -z "$CF_HEADERS" ]; then
-    echo -e "⚠️  \033[1;33mWarning: No Cloudflare Service Token found in .env. You may be blocked by Zero Trust.\033[0m"
-    echo "curl -v -X PUT -H 'Content-Type: ${CONTENT_TYPE}' --upload-file YOUR_FILE '$URL'"
-else
-    echo "curl -v -X PUT $CF_HEADERS -H 'Content-Type: ${CONTENT_TYPE}' --upload-file YOUR_FILE '$URL'"
-fi
+echo -n "$URL" | pbcopy
+echo "✅ URL copied to clipboard"
