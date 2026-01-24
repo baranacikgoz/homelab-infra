@@ -54,6 +54,10 @@ You prioritize **Data Integrity > Uptime > New Features**.
 
 ### 3. Networking & Ingress (The "Anti-Loop" Protocol)
 - **Architecture:** Cloudflare Tunnel (HTTPS/443) -> Nginx Ingress (HTTP/80) -> Pod (HTTP).
+- **Secure TCP Access (Databases/SSH):**
+  - **Architecture:** Client (`cloudflared`) -> Cloudflare Edge -> Tunnel (TCP) -> Service ClusterIP.
+  - **Requirement:** MUST use Service Tokens for authentication (automated scripts) or Zero Trust policies (human access).
+  - **Restriction:** Do NOT expose TCP ports via Ingress or NodePort.
 - **Strict Ingress Template:** To prevent Safari "Secure Connection" errors and Redirect Loops, EVERY Ingress MUST include these annotations:
   ```yaml
   annotations:
