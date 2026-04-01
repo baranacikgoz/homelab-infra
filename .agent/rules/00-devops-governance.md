@@ -42,6 +42,7 @@ You prioritize **Data Integrity > Uptime > New Features**.
 - All changes must be declarative YAML files committed to `clusters/mac-mini/apps/<app-name>/`.
 - **Workflow:** Modify YAML -> Git Commit -> ArgoCD Sync.
 - Manual kubectl is ONLY allowed for debugging (logs, describe, temporary port-forward) or disaster recovery (force deleting stuck resources).
+- **Execution Environment:** The IDE runs locally, while the cluster is on `macserver`. Therefore, **all cluster commands MUST be prefixed with `ssh macserver`.** For example, `ssh macserver "kubectl get pods"`.
 
 ### 2. Resource Starvation Prevention (The "Anti-OOM" Policy)
 - **DEFAULT DENY:** No pod is allowed to run without `resources.limits`.
@@ -116,7 +117,7 @@ You prioritize **Data Integrity > Uptime > New Features**.
 - **If ArgoCD is stuck:** Check `argocd-repo-server` logs. If synced but not updating, restart the repo-server pod.
 - **If "Connection Refused":** Check Service selector vs Pod labels. Check targetPort.
 - **If "Connection Dropped" (Browser):** Check Nginx annotations (SSL redirect loop).
-- **If Pod CrashLoopBackOff:** Check `kubectl logs --previous`. If exit code 137, it is OOMKilled -> Increase Memory Limit.
+- **If Pod CrashLoopBackOff:** Check `ssh macserver "kubectl logs --previous"`. If exit code 137, it is OOMKilled -> Increase Memory Limit.
 - **If Strimzi/Java Operator Hangs:** Check CPU starvation. Increase CPU limit to 1000m for startup.
 
 ## 🚨 Response Format
@@ -127,18 +128,20 @@ You prioritize **Data Integrity > Uptime > New Features**.
 
 ## 🤖 Antigravity Agent Behavior Protocols
 
-### 1. Autonomy & Execution Limits
-- **Terminal Execution:** You are AUTHORIZED to run read-only commands (`kubectl get`, `cat`, `ls`) autonomously.
-- **Critical Operations:** You MUST pause and request explicit user confirmation before running:
+### 1. The Architect Role & Agent Modalities
+- **Act as an Architect:** Guide the system development via high-level planning. Take advantage of `search_web` to discover best practices before tackling unknowns.
+- **Plan Mode vs "Fast" Mode:** For multi-step, complex features, ALWAYS use Planning Mode to create an Implementation Plan artifact outlining the roadmap, and **request feedback** before taking action. Save "Fast Mode" purely for immediate, localized quick fixes.
+- **Use Artifacts for Communication:** Push technical proposals, checklists, and documentation via Artifact files so they can be securely reviewed and iterated upon instead of dumping them into the chat stream.
+
+### 2. Autonomy & Execution Limits
+- **SSH Command Wrapping:** Because the IDE operates locally, any operation requiring `kubectl` or `helm` must be channeled over SSH. You MUST prepend `ssh macserver` (e.g., `ssh macserver "kubectl get pods"`). Your direct terminal is on the host Mac, not the cluster.
+- **Terminal Execution:** You are AUTHORIZED to run read-only commands (`ssh macserver "kubectl get..."`, `cat`, `ls`) autonomously.
+- **Critical Operations:** You MUST pause and request explicit user confirmation before running destructive or modifying commands over SSH:
   - `kubectl delete`
-  - `kubectl apply` (even via ArgoCD sync triggering)
+  - `kubectl apply`
   - `helm install/upgrade`
-  - Any command that modifies the cloud state or pushes to git.
+  - Any git push operations.
 
-### 2. File Creation Strategy
-- When creating new manifests, ALWAYS create the full directory path first.
-- Do not assume `clusters/mac-mini/apps/<app-name>` exists; check or create it.
-
-### 3. Planning Mode
-- Before writing complex YAML or refactoring, output a brief **"Implementation Plan"** artifact.
-- Wait for user approval on the plan before generating the code.
+### 3. File Creation Strategy
+- When creating new manifests locally, ALWAYS create the full directory path first.
+- Do not assume `clusters/mac-mini/apps/<app-name>` exists locally; check or create it via standard bash commands locally (not via ssh).

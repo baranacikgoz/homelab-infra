@@ -12,18 +12,18 @@ Each app needs a unique identity and access policy in Vault.
 
 ```bash
 # 1.1: Create Policy for the app
-kubectl exec -it vault-0 -n vault -- /bin/sh -c 'vault policy write <app-name>-policy - <<EOF
-path "apps/data/production/<app-name>/*" {
-  capabilities = ["read"]
+ssh macserver "kubectl exec vault-0 -n vault -- /bin/sh -c 'vault policy write <app-name>-policy - <<EOF
+path \"apps/data/production/<app-name>/*\" {
+  capabilities = [\"read\"]
 }
-EOF'
+EOF'"
 
 # 1.2: Create Kubernetes Auth Role
-kubectl exec -it vault-0 -n vault -- vault write auth/kubernetes/role/<app-name>-role \
+ssh macserver "kubectl exec vault-0 -n vault -- vault write auth/kubernetes/role/<app-name>-role \
     bound_service_account_names=<app-name> \
     bound_service_account_namespaces=<namespace> \
     policies=<app-name>-policy \
-    ttl=24h
+    ttl=24h"
 ```
 
 ## Step 2: Provision Secrets in Vault
@@ -31,9 +31,9 @@ kubectl exec -it vault-0 -n vault -- vault write auth/kubernetes/role/<app-name>
 Add the production secrets that the app will consume.
 
 ```bash
-kubectl exec -it vault-0 -n vault -- vault kv put apps/production/<app-name>/config \
-    DB_CONNECTION="Host=...;Database=..." \
-    API_KEY="super-secret-key"
+ssh macserver "kubectl exec vault-0 -n vault -- vault kv put apps/production/<app-name>/config \
+    DB_CONNECTION=\"Host=...;Database=...\" \
+    API_KEY=\"super-secret-key\""
 ```
 
 ## Step 3: Update Kubernetes Manifests
@@ -121,8 +121,8 @@ Check if the sidecars are injected and the secret file is present.
 
 ```bash
 # Verify pod status
-kubectl get pods -n <namespace> -l app=<app-name>
+ssh macserver "kubectl get pods -n <namespace> -l app=<app-name>"
 
 # Verify secret file content
-kubectl exec -it $(kubectl get pod -n <namespace> -l app=<app-name> -o name | head -1) -c <container-name> -n <namespace> -- cat /vault/secrets/secrets.json
+ssh macserver "kubectl exec \$(kubectl get pod -n <namespace> -l app=<app-name> -o name | head -1) -c <container-name> -n <namespace> -- cat /vault/secrets/secrets.json"
 ```

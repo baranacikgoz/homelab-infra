@@ -220,10 +220,10 @@ spec:
 If your app uses standard secrets, create them manually:
 
 ```bash
-kubectl create secret generic <app-name>-secret \
+ssh macserver "kubectl create secret generic <app-name>-secret \
   -n <namespace> \
   --from-literal=key1=value1 \
-  --from-literal=key2=value2
+  --from-literal=key2=value2"
 ```
 
 **OR** add to `scripts/setup-secrets.sh` for automation.
@@ -250,9 +250,9 @@ git push origin main
 ## Step 8: Verify Pod Health
 
 ```bash
-kubectl get pods -n <namespace>
-kubectl describe pod -n <namespace> <pod-name>
-kubectl logs -n <namespace> <pod-name>
+ssh macserver "kubectl get pods -n <namespace>"
+ssh macserver "kubectl describe pod -n <namespace> <pod-name>"
+ssh macserver "kubectl logs -n <namespace> <pod-name>"
 ```
 
 **Expected**:
@@ -269,14 +269,17 @@ curl -I https://<subdomain>.baranacikgoz.com
 
 ### If internal only:
 ```bash
-kubectl port-forward -n <namespace> svc/<app-name> 8080:80
-curl http://localhost:8080
+ssh macserver "kubectl port-forward -n <namespace> svc/<app-name> 8080:80"
+```
+*(In a separate terminal session)*:
+```bash
+ssh macserver "curl http://localhost:8080"
 ```
 
 ## Step 10: Monitor Resource Usage
 
 ```bash
-kubectl top pod -n <namespace>
+ssh macserver "kubectl top pod -n <namespace>"
 ```
 
 **If memory usage is near the limit**, increase the limit and redeploy.
@@ -284,11 +287,11 @@ kubectl top pod -n <namespace>
 ## Troubleshooting Guide
 
 ### Pod is `Pending`
-- **Check**: `kubectl describe pod -n <namespace> <pod-name>`
+- **Check**: `ssh macserver "kubectl describe pod -n <namespace> <pod-name>"`
 - **Common causes**: PVC not found, insufficient resources, node selector mismatch
 
 ### Pod is `CrashLoopBackOff`
-- **Check**: `kubectl logs -n <namespace> <pod-name> --previous`
+- **Check**: `ssh macserver "kubectl logs -n <namespace> <pod-name> --previous"`
 - **Common causes**: 
   - Exit code 137 = OOMKilled (increase memory limit)
   - Missing environment variables
