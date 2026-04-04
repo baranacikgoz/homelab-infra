@@ -1,0 +1,40 @@
+# Scale Set Configuration for the Claude .NET Developer
+# Aligned with T-Shirt Medium and Governance Anti-OOM
+
+gha-runner-scale-set:
+  githubConfigUrl: "https://github.com/baranacikgoz/homelab-infra"
+  githubConfigSecret: arc-github-app-secret
+  
+  # Safety boundaries for Mac Mini M4 resource pool
+  minRunners: 0
+  maxRunners: 2
+  
+  # Service account to execute high-privilege build actions if needed
+  # Default is fine for now
+  
+  template:
+    spec:
+      containers:
+        - name: runner
+          # The image we automated build & push for in Phase 3
+          image: ghcr.io/baranacikgoz/homelab-infra/claude-dotnet-developer:latest
+          
+          # Governance Rules (Medium T-Shirt Mapping)
+          resources:
+            requests:
+              cpu: 200m
+              memory: 512Mi
+            limits:
+              cpu: 1000m
+              memory: 1.5Gi # Hard limit to prevent RAM starvation
+          
+          env:
+            - name: RUNNER_TAGS
+              value: "claude-ai,dotnet-dev"
+            # Ingesting the Anthropic key from the secret created in Phase 4 out-of-band step
+            - name: ANTHROPIC_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: claude-ai-secret
+                  key: anthropic_api_key
+                  optional: true
