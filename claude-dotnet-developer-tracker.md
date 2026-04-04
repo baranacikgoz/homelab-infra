@@ -29,27 +29,30 @@ When you pick up this file to execute tasks:
 
 ### Phase 1: Controller Infrastructure (Adhering to deploy-app.md)
 
-- [/] **1.1 Evaluate Certificate Manager:** Use terminal `ssh macserver "kubectl get pods -n cert-manager"` to verify installation. ARC Controller requires cert-manager for webhook generation.
-- [/] **1.2 Validate App-of-Apps Manifest:** Ensure `clusters/mac-mini/apps/arc-controller.yaml` matches the blueprint in `deploy-app.md` step 4. Namespace mapping should be explicit (`CreateNamespace=true`).
-- [/] **1.3 Helm Chart Specification:** Ensure `clusters/mac-mini/apps/arc-controller/Chart.yaml` binds correctly to the official ARC helm repo.
-- [/] **1.4 ARC Configuration (values.yaml):** Define the controller deployment values. It MUST map to the "Micro" T-Shirt size (`Request: 50m/64Mi`, `Limit: 128Mi` to stay under macOS memory overhead). Ensure probes are active. 
+- [x] **1.1 Evaluate Certificate Manager:** Use terminal `ssh macserver "kubectl get pods -n cert-manager"` to verify installation. ARC Controller requires cert-manager for webhook generation.
+- [x] **1.2 Validate App-of-Apps Manifest:** Ensure `clusters/mac-mini/apps/arc-controller.yaml` matches the blueprint in `deploy-app.md` step 4. Namespace mapping should be explicit (`CreateNamespace=true`).
+- [x] **1.3 Helm Chart Specification:** Ensure `clusters/mac-mini/apps/arc-controller/Chart.yaml` binds correctly to the official ARC helm repo.
+- [x] **1.4 ARC Configuration (values.yaml):** Define the controller deployment values. It MUST map to the "Micro" T-Shirt size (`Request: 50m/64Mi`, `Limit: 128Mi` to stay under macOS memory overhead). Ensure probes are active. 
 
 ### Phase 2: Zero-Leak Authentication Setup (Standard Secrets)
-- [ ] **2.1 Prepare Webhook/Runner Auth:** Under "Option A: Standard Kubernetes Secrets" of `deploy-app.md`, we never push secrets to Git. Output exactly the command the User needs to run on their host machine for GitHub auth:
-  ```bash
-  ssh macserver "kubectl create namespace arc-runners; kubectl create secret generic controller-manager -n arc-system --from-literal=github_token=<WAIT_FOR_USER_TOKEN>"
-  ```
-- [ ] **2.2 Acknowledge Setup:** Confirm with the User that the secret exists in the cluster before proceeding.
+- [x] **2.1 Prepare Webhook/Runner Auth:** Under "Option A: Standard Kubernetes Secrets" of `deploy-app.md`, we never push secrets to Git. Output exactly the command the User needs to run on their host machine for GitHub auth:
+- [x] **2.2 Acknowledge Setup:** Confirm with the User that the secret exists in the cluster before proceeding.
 
 ### Phase 3: The Claude .NET Builder Sub-System (Docker Artifact)
-- [ ] **3.1 Directory Schema:** Create standard folder `/docker/claude-dotnet-developer/` in the repo root (outside the GitOps deployment path).
-- [ ] **3.2 Craft the ARM64 Dockerfile:** Create the `Dockerfile` enforcing compatibility:
-      - Base: `mcr.microsoft.com/dotnet/sdk:8.0-bookworm-slim` (arm64 native).
-      - Add packages: `nodejs`, `npm`, `git`, `curl` via `apt-get`.
-      - Install GitHub CLI (`gh`).
-      - Install Claude Code (`npm install -g @anthropic-ai/claude-code`).
-      - Setup `ai-runner` non-root user.
-- [ ] **3.3 Pipeline Export:** Document the exact `docker buildx` terminal commands required to build the multi-platform image and push to `ghcr.io`.
+- [x] **3.1 Directory Schema:** Create standard folder `/docker/claude-dotnet-developer/` in the repo root (outside the GitOps deployment path).
+- [x] **3.2 Craft the ARM64 Dockerfile:** Create the `Dockerfile` enforcing compatibility:
+      - Base: `mcr.microsoft.com/dotnet/sdk:10.0-bookworm-slim` (arm64 native).
+- [x] **3.3 Pipeline Export:** Document the exact `docker buildx` terminal commands required to build the multi-platform image and push to `ghcr.io`:
+      ```bash
+      # 1. Login to GHCR (Username: baranacikgoz, Password: <YOUR_GH_TOKEN_WITH_PACKAGES_WRITE>)
+      echo $GH_TOKEN | docker login ghcr.io -u baranacikgoz --password-stdin
+
+      # 2. Build multi-platform (linux/arm64 for Mac Mini M4)
+      docker buildx build --platform linux/arm64 \
+        -t ghcr.io/baranacikgoz/claude-dotnet-developer:latest \
+        -f docker/claude-dotnet-developer/Dockerfile \
+        ./docker/claude-dotnet-developer/ --push
+      ```
 
 ### Phase 4: Ephemeral Worker Template Maps (Anti-OOM Restrictions)
 - [ ] **4.1 RunnerDeployment Manifest:** Since the AI runner pods are ephemeral jobs spawned by the controller, create `clusters/mac-mini/apps/arc-controller/runnerdeployment.yaml`.
