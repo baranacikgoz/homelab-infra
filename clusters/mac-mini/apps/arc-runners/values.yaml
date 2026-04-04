@@ -5,6 +5,11 @@ gha-runner-scale-set:
   githubConfigUrl: "https://github.com/baranacikgoz/homelab-infra"
   githubConfigSecret: arc-github-app-secret
   
+  # Cross-namespace Controller Discovery
+  controllerServiceAccount:
+    namespace: arc-system
+    name: arc-controller-gha-rs-controller
+  
   # Safety boundaries for Mac Mini M4 resource pool
   minRunners: 0
   maxRunners: 2
