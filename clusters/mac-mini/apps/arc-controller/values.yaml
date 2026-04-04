@@ -1,0 +1,16 @@
+# ARC Controller values adhering to Governance Standards
+gha-runner-scale-set-controller:
+  # Micro T-Shirt sizing (Governance Rule 2)
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 100m
+      memory: 128Mi
+  
+  # For metrics configuration (Governance Rule 7)
+  metrics:
+    controllerManagerAddr: ":8080"
+    listenerAddr: ":8080"
+    listenerEndpoint: "/metrics"
