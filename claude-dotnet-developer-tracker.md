@@ -68,9 +68,12 @@ When you pick up this file to execute tasks:
       - Safety verification block: `dotnet build` & `dotnet test`. (Crucial step for safety).
       - Automated git commit and PR operations via the runner's GH token.
 
----
-**Deployment Finalized:** The ARC-based Headless AI Developer system is now operational. It follows the homelab's DevOps Governance 2.0 with strict Anti-OOM resource management and Zero-Leak secrets handling.
-*Created by the Principal Architect Agent.*
+### Phase 6: Docker & Testcontainers Support
+- [x] **6.1 Dockerfile Expansion:** Install `docker-ce-cli` and dependencies in the `.NET` runner image.
+- [x] **6.2 Sidecar Implementation:** Update `arc-runners/values.yaml` to integrate the `dind` sidecar container.
+- [x] **6.3 Resource Re-balancing:** Adjust limits to maintain the 1.5Gi combined pod ceiling (Runner: 1Gi, DinD: 512Mi).
+- [ ] **6.4 Connectivity Verification:** Ingest `DOCKER_HOST` and verify communication between containers.
 
 ---
-*Created by the Principal Architect Agent.*
+**Deployment Finalized (Initial):** The ARC-based Headless AI Developer system is now operational. Current evolution: Adding Docker sidecars for Testcontainers support.
+*Last Updated by the Principal SRE.*

@@ -21,25 +21,44 @@ gha-runner-scale-set:
     spec:
       containers:
         - name: runner
-          # The image we automated build & push for in Phase 3
           image: ghcr.io/baranacikgoz/homelab-infra/claude-dotnet-developer:latest
-          
-          # Governance Rules (Medium T-Shirt Mapping)
+          # Re-balanced for DIND: 1Gi Limit (Medium variant)
           resources:
             requests:
               cpu: 200m
               memory: 512Mi
             limits:
               cpu: 1000m
-              memory: 1.5Gi # Hard limit to prevent RAM starvation
-          
+              memory: 1Gi
           env:
             - name: RUNNER_TAGS
               value: "claude-ai,dotnet-dev"
-            # Ingesting the Anthropic key from the secret created in Phase 4 out-of-band step
+            - name: DOCKER_HOST
+              value: tcp://localhost:2375
             - name: ANTHROPIC_API_KEY
               valueFrom:
                 secretKeyRef:
                   name: claude-ai-secret
                   key: anthropic_api_key
                   optional: true
+        - name: dind
+          image: docker:27-dind
+          # Small variant for DIND overhead
+          resources:
+            requests:
+              cpu: 50m
+              memory: 256Mi
+            limits:
+              cpu: 200m
+              memory: 512Mi
+          securityContext:
+            privileged: true
+          env:
+            - name: DOCKER_TLS_CERTDIR
+              value: ""
+          volumeMounts:
+            - name: docker-graph-storage
+              mountPath: /var/lib/docker
+      volumes:
+        - name: docker-graph-storage
+          emptyDir: {}

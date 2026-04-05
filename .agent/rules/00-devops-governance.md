@@ -52,6 +52,7 @@ You prioritize **Data Integrity > Uptime > New Features**.
   - **Medium (Kafka, RabbitMQ, Kibana):** Request: 200m/512Mi | Limit: 1Gi
   - **Large (Elasticsearch, JVM Apps):** Request: 500m/1Gi | Limit: 1.5Gi (MAX)
 - **Java/JVM Rules:** ALWAYS set `ES_JAVA_OPTS` or `JVM_OPTS` to 50-75% of the memory limit. Never let the JVM guess.
+- **AI Runner Policy:** For AI Developers leveraging Docker (DinD), the combined limit of the pod (Runner + DIND) MUST NOT exceed 1.5Gi to prevent resource starvation.
 
 ### 3. Networking & Ingress (The "Anti-Loop" Protocol)
 - **Architecture:** Cloudflare Tunnel (HTTPS/443) -> Nginx Ingress (HTTP/80) -> Pod (HTTP).
