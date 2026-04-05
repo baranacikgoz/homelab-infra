@@ -1,0 +1,13 @@
+apiVersion: v2
+name: arc-runners
+description: Helm wrapper for ARC Scale Sets (Claude .NET Developer)
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+
+# Using OCI Registry for ARC
+# Dependency for the scale set chart
+dependencies:
+  - name: gha-runner-scale-set
+    version: 0.10.1
+    repository: "oci://ghcr.io/actions/actions-runner-controller-charts"

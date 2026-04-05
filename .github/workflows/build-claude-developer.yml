@@ -1,19 +1,25 @@
-name: 🐳 Build and Push Claude .NET Developer Image
+name: 🐳 Build and Push Claude Developer Images
 
 on:
   push:
     branches: [ "main" ]
     paths:
       - 'docker/claude-dotnet-developer/**'
+      - 'docker/claude-flutter-developer/**'
   workflow_dispatch:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}/claude-dotnet-developer
 
 jobs:
   build:
+    name: 🏗️ Build ${{ matrix.language }}
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [dotnet, flutter]
+    
     permissions:
       contents: read
       packages: write
@@ -39,7 +45,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          images: ${{ env.REGISTRY }}/${{ github.repository }}/claude-${{ matrix.language }}-developer
           tags: |
             type=sha,format=short
             type=ref,event=branch
@@ -49,7 +55,7 @@ jobs:
         id: build-and-push
         uses: docker/build-push-action@v6
         with:
-          context: ./docker/claude-dotnet-developer
+          context: ./docker/claude-${{ matrix.language }}-developer
           push: true
           platforms: linux/arm64
           tags: ${{ steps.meta.outputs.tags }}

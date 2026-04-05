@@ -1,0 +1,66 @@
+# Scale Set Configuration for the Claude Flutter Developer
+# Aligned with T-Shirt Medium and Governance Anti-OOM
+
+gha-runner-scale-set:
+  githubConfigUrl: "https://github.com/baranacikgoz/modular-monolith-ddd-vsa-webapi"
+  githubConfigSecret: arc-github-app-secret
+  
+  # Cross-namespace Controller Discovery
+  controllerServiceAccount:
+    namespace: arc-system
+    name: arc-controller-gha-rs-controller
+  
+  # Safety boundaries for Mac Mini M4 resource pool
+  minRunners: 0
+  maxRunners: 2
+  
+  # Service account to execute high-privilege build actions if needed
+  # Default is fine for now
+  
+  template:
+    spec:
+      containers:
+        - name: runner
+          image: ghcr.io/baranacikgoz/homelab-infra/claude-flutter-developer:latest
+          imagePullPolicy: Always
+          command: ["/home/runner/run.sh"]
+          # Re-balanced for DIND: 1Gi Limit (Medium variant)
+          resources:
+            requests:
+              cpu: 200m
+              memory: 512Mi
+            limits:
+              cpu: 1000m
+              memory: 1Gi
+          env:
+            - name: RUNNER_TAGS
+              value: "claude-ai,flutter-dev"
+            - name: DOCKER_HOST
+              value: tcp://localhost:2375
+            - name: ANTHROPIC_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: claude-ai-secret
+                  key: anthropic_api_key
+                  optional: true
+        - name: dind
+          image: docker:27-dind
+          # Small variant for DIND overhead
+          resources:
+            requests:
+              cpu: 50m
+              memory: 256Mi
+            limits:
+              cpu: 200m
+              memory: 512Mi
+          securityContext:
+            privileged: true
+          env:
+            - name: DOCKER_TLS_CERTDIR
+              value: ""
+          volumeMounts:
+            - name: docker-graph-storage
+              mountPath: /var/lib/docker
+      volumes:
+        - name: docker-graph-storage
+          emptyDir: {}

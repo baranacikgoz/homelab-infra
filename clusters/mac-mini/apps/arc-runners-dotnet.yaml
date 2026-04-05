@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: arc-runners
+  name: arc-runners-dotnet
   namespace: argocd
   annotations:
     # Scale sets MUST start after the controller is ready
@@ -11,7 +11,7 @@ spec:
   source:
     repoURL: git@github.com:baranacikgoz/homelab-infra.git
     targetRevision: main
-    path: clusters/mac-mini/apps/arc-runners
+    path: clusters/mac-mini/apps/arc-runners-dotnet
   destination:
     server: https://kubernetes.default.svc
     namespace: arc-runners

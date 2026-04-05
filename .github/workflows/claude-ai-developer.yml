@@ -5,11 +5,39 @@ on:
     types: [labeled]
 
 jobs:
+  setup:
+    name: 🔍 Parse Label & Select Model
+    if: startsWith(github.event.label.name, 'claudeai-')
+    runs-on: ubuntu-latest
+    outputs:
+      language: ${{ steps.parse.outputs.language }}
+      tier: ${{ steps.parse.outputs.tier }}
+      model: ${{ steps.parse.outputs.model }}
+    steps:
+      - name: 🛠️ Parse Label
+        id: parse
+        run: |
+          LABEL="${{ github.event.label.name }}"
+          # Format: claudeai-LANGUAGE-TIER
+          IFS='-' read -r PREFIX LANGUAGE TIER <<< "$LABEL"
+          
+          # Map Tiers to Anthropic Models
+          case "$TIER" in
+            light) MODEL="claude-3-5-haiku-20241022" ;;
+            mid)   MODEL="claude-3-5-sonnet-20241022" ;;
+            high)  MODEL="claude-3-7-sonnet-20250219" ;;
+            ultra) MODEL="claude-3-opus-20240229" ;;
+            *)     MODEL="claude-3-5-sonnet-20241022" ;; # Default to Sonnet
+          esac
+          
+          echo "language=$LANGUAGE" >> $GITHUB_OUTPUT
+          echo "tier=$TIER" >> $GITHUB_OUTPUT
+          echo "model=$MODEL" >> $GITHUB_OUTPUT
+
   ai-developer-task:
-    # Trigger ONLY when the specific label is applied
-    if: github.event.label.name == 'claude-ai'
-    name: Execute Autonomous Claude Agent
-    runs-on: arc-runners
+    name: 🧠 Execute ${{ needs.setup.outputs.language }} Agent (${{ needs.setup.outputs.tier }})
+    needs: setup
+    runs-on: arc-runners-${{ needs.setup.outputs.language }}
     
     # Required for Claude to use the `gh` cli inside the container
     permissions:
@@ -45,9 +73,13 @@ jobs:
           CLAUDE_INTERACTIVE: "false"
         run: |
           echo "Executing autonomous task for Issue #${{ github.event.issue.number }}..."
+          echo "Intelligence Tier: ${{ needs.setup.outputs.tier }}"
+          echo "Language Target: ${{ needs.setup.outputs.language }}"
+          echo "Model Override: ${{ needs.setup.outputs.model }}"
           
-          # One master prompt giving Claude complete control of the lifecycle
-          claude --dangerously-skip-permissions -p "You are an autonomous AI Developer tasked with resolving GitHub Issue #${{ github.event.issue.number }}: '$ISSUE_TITLE'. 
+          # Master prompt with Tier awareness
+          claude --dangerously-skip-permissions --model "${{ needs.setup.outputs.model }}" -p "You are an autonomous AI Developer operating at the ${{ needs.setup.outputs.tier }} intelligence level. 
+          Your task is to resolve GitHub Issue #${{ github.event.issue.number }}: '$ISSUE_TITLE'. 
           
           Issue Details:
           $ISSUE_BODY
@@ -58,8 +90,9 @@ jobs:
           3. Once confident, create a new branch named 'claude-fix/issue-${{ github.event.issue.number }}' unless explicitly told to use the same branch & same PR.
           4. Commit your changes and push the branch to origin.
           5. Use the 'gh' CLI.
-          6. The PR description MUST include:
+          7. The PR description MUST include:
              - 'Fixes #${{ github.event.issue.number }}'
-             - A 'Decisions & Rationale' section explaining exactly WHY you chose this implementation over alternatives for this $ISSUE_TITLE.
+             - A 'Decisions & Rationale' section explaining exactly WHY you chose this implementation for this $ISSUE_TITLE.
+             - Intelligence Tier used: ${{ needs.setup.outputs.tier }} (${{ needs.setup.outputs.model }})
           
           You have full autonomy to use bash, git, and standard tooling to complete this. Do not stop until the Pull Request is confirmed created."
