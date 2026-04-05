@@ -7,7 +7,8 @@ on:
 jobs:
   setup:
     name: 🔍 Parse Label & Select Model
-    if: startsWith(github.event.label.name, 'claude-ai-dotnet-')
+    # Trigger on any label containing 'claude' and 'dotnet' to be more resilient
+    if: contains(github.event.label.name, 'claude') && contains(github.event.label.name, 'dotnet')
     runs-on: ubuntu-latest
     outputs:
       tier: ${{ steps.parse.outputs.tier }}
@@ -17,8 +18,12 @@ jobs:
         id: parse
         run: |
           LABEL="${{ github.event.label.name }}"
-          # Format: claude-ai-dotnet-TIER
-          IFS='-' read -r PREFIX LANG TIER <<< "$LABEL"
+          echo "Processing label: $LABEL"
+          
+          # Extract the last part of the dash-separated label as the TIER
+          # This works for both 'claudeai-dotnet-high' and 'claude-ai-dotnet-high'
+          TIER=$(echo "$LABEL" | grep -oE '[^-]+$')
+          echo "Extracted Tier: $TIER"
           
           case "$TIER" in
             light) MODEL="claude-3-5-haiku-20241022" ;;
