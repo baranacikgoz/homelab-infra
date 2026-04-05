@@ -1,0 +1,87 @@
+name: 🤖 Claude AI Flutter Developer
+
+on:
+  issues:
+    types: [labeled]
+
+jobs:
+  setup:
+    name: 🔍 Parse Label & Select Model
+    if: startsWith(github.event.label.name, 'claudeai-flutter-')
+    runs-on: ubuntu-latest
+    outputs:
+      tier: ${{ steps.parse.outputs.tier }}
+      model: ${{ steps.parse.outputs.model }}
+    steps:
+      - name: 🛠️ Parse Label
+        id: parse
+        run: |
+          LABEL="${{ github.event.label.name }}"
+          # Format: claudeai-flutter-TIER
+          IFS='-' read -r PREFIX LANG TIER <<< "$LABEL"
+          
+          case "$TIER" in
+            light) MODEL="claude-3-5-haiku-20241022" ;;
+            mid)   MODEL="claude-3-5-sonnet-20241022" ;;
+            high)  MODEL="claude-3-7-sonnet-20250219" ;;
+            ultra) MODEL="claude-3-opus-20240229" ;;
+            *)     MODEL="claude-3-5-sonnet-20241022" ;;
+          esac
+          
+          echo "tier=$TIER" >> $GITHUB_OUTPUT
+          echo "model=$MODEL" >> $GITHUB_OUTPUT
+
+  flutter-developer:
+    name: 🚀 Flutter Agent (${{ needs.setup.outputs.tier }})
+    needs: setup
+    runs-on: arc-runners-flutter
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 💬 Contextualize Task
+        id: context
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          ISSUE_BODY=$(gh issue view ${{ github.event.issue.number }} --json body -q .body)
+          ISSUE_TITLE=$(gh issue view ${{ github.event.issue.number }} --json title -q .title)
+          echo "ISSUE_BODY<<EOF" >> $GITHUB_ENV
+          echo "$ISSUE_BODY" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+          echo "ISSUE_TITLE<<EOF" >> $GITHUB_ENV
+          echo "$ISSUE_TITLE" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: 🧠 Unleash Flutter Agent
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CLAUDE_INTERACTIVE: "false"
+        run: |
+          # Specialized Flutter Prompt
+          claude --dangerously-skip-permissions --model "${{ needs.setup.outputs.model }}" -p "You are a Senior Flutter/Dart Developer specializing in cross-platform excellence and clean UI.
+          
+          Your mission: Resolve GitHub Issue #${{ github.event.issue.number }}: '$ISSUE_TITLE'.
+          
+          Context:
+          $ISSUE_BODY
+          
+          Core Flutter Rules:
+          1. Use 'flutter pub get' for dependencies.
+          2. Ensure UI changes are testable.
+          3. Verify all changes via 'flutter test' or 'flutter doctor'.
+          4. Adhere to 'CLAUDE.md' for Flutter specific patterns (e.g., State Management).
+          
+          Execution Lifecycle:
+          1. Output your 'Plan of Action' to the console.
+          2. Implement changes.
+          3. Create a branch 'claude-fix/flutter-issue-${{ github.event.issue.number }}'.
+          4. Push and create a Pull Request with 'Fixes #${{ github.event.issue.number }}'.
+          5. The PR MUST have a 'Decisions & Rationale' section explaining your architectural choices."
