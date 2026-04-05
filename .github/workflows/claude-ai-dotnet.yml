@@ -7,7 +7,7 @@ on:
 jobs:
   setup:
     name: 🔍 Parse Label & Select Model
-    if: startsWith(github.event.label.name, 'claudeai-dotnet-')
+    if: startsWith(github.event.label.name, 'claude-ai-dotnet-')
     runs-on: ubuntu-latest
     outputs:
       tier: ${{ steps.parse.outputs.tier }}
@@ -17,7 +17,7 @@ jobs:
         id: parse
         run: |
           LABEL="${{ github.event.label.name }}"
-          # Format: claudeai-dotnet-TIER
+          # Format: claude-ai-dotnet-TIER
           IFS='-' read -r PREFIX LANG TIER <<< "$LABEL"
           
           case "$TIER" in
@@ -65,23 +65,24 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CLAUDE_INTERACTIVE: "false"
         run: |
-          # Specialized .NET Prompt
-          claude --dangerously-skip-permissions --model "${{ needs.setup.outputs.model }}" -p "You are a Senior .NET Architect and Developer specializing in Clean Architecture, DDD, and Vertical Slice Architecture (VSA). 
+          echo "Executing autonomous task for Issue #${{ github.event.issue.number }}..."
           
-          Your mission: Resolve GitHub Issue #${{ github.event.issue.number }}: '$ISSUE_TITLE'.
+          # One master prompt giving Claude complete control of the lifecycle
+          claude --dangerously-skip-permissions --model "${{ needs.setup.outputs.model }}" -p "You are an autonomous AI Software Engineer Specialized in .NET, Clean Architecture, DDD, and Vertical Slice Architecture (VSA). 
+          
+          GitHub Issue #${{ github.event.issue.number }}: '$ISSUE_TITLE' is assigned to you.
           
           Context:
           $ISSUE_BODY
           
-          Core .NET Rules:
-          1. Adhere to the Modular Monolith principles in this repo.
-          2. Use C# 12+ features where appropriate.
-          3. Ensure all changes are verified via 'dotnet build' and 'dotnet test'.
-          4. Follow 'CLAUDE.md' strictly for project-specific patterns.
+          Instructions:
+          1. Strictly adhere to rules defined in CLAUDE.md.
+          2. Output your 'Plan of Action' to the console.
+          3. Implement changes.
+          4. Verify changes, see `.agent/workflows/verify-feature.md`.
+          5. Create a branch 'claude-ai-dotnet/dotnet-issue-${{ github.event.issue.number }}'.
+          6. Push and create a Pull Request with 'Fixes #${{ github.event.issue.number }}'.
+          7. The PR MUST have a 'Decisions & Rationale' section explaining your architectural choices."
           
-          Execution Lifecycle:
-          1. Output your 'Plan of Action' to the console.
-          2. Implement changes.
-          3. Create a branch 'claude-fix/dotnet-issue-${{ github.event.issue.number }}'.
-          4. Push and create a Pull Request with 'Fixes #${{ github.event.issue.number }}'.
-          5. The PR MUST have a 'Decisions & Rationale' section explaining your architectural choices."
+          If you repeatedly fail to solve the problem, you should stop and report the failure with the root cause, open the PR with the current state and ask for human help. Do not "loop" on the same failed approach which will result API Credit waste.
+          

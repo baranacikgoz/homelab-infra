@@ -7,7 +7,7 @@ on:
 jobs:
   setup:
     name: 🔍 Parse Label & Select Model
-    if: startsWith(github.event.label.name, 'claudeai-flutter-')
+    if: startsWith(github.event.label.name, 'claude-ai-flutter-')
     runs-on: ubuntu-latest
     outputs:
       tier: ${{ steps.parse.outputs.tier }}
@@ -17,7 +17,7 @@ jobs:
         id: parse
         run: |
           LABEL="${{ github.event.label.name }}"
-          # Format: claudeai-flutter-TIER
+          # Format: claude-ai-flutter-TIER
           IFS='-' read -r PREFIX LANG TIER <<< "$LABEL"
           
           case "$TIER" in
