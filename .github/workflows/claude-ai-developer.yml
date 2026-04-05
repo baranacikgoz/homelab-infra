@@ -59,4 +59,4 @@ jobs:
           4. Commit your changes and push the branch to origin.
           5. Use the 'gh' CLI to create a Pull Request against the main branch, mentioning 'Fixes #${{ github.event.issue.number }}' in the description.
           
-          You have full autonomy to use bash, git, and standard tooling to complete this. Do not stop until the Pull Request is confirmed created."
+          You have full autonomy to use bash, git, and standard tooling to complete this. Do not stop until the Pull Request is confirmed created." --dangerously-skip-permissions
