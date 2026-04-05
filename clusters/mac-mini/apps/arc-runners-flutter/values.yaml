@@ -24,14 +24,14 @@ gha-runner-scale-set:
           image: ghcr.io/baranacikgoz/homelab-infra/claude-flutter-developer:latest
           imagePullPolicy: Always
           command: ["/home/runner/run.sh"]
-          # Re-balanced for DIND: 1Gi Limit (Medium variant)
+          # Relaxed for Intensive AI + Build workloads: 2.0 CPU / 1.5Gi RAM
           resources:
             requests:
-              cpu: 200m
-              memory: 512Mi
-            limits:
-              cpu: 1000m
+              cpu: 500m
               memory: 1Gi
+            limits:
+              cpu: 2000m
+              memory: 1.5Gi
           env:
             - name: RUNNER_TAGS
               value: "claude-ai,flutter-dev"
