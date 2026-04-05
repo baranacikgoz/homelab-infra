@@ -65,7 +65,7 @@ jobs:
           CLAUDE_INTERACTIVE: "false"
         run: |
           # Specialized Flutter Prompt
-          claude --dangerously-skip-permissions --model "${{ needs.setup.outputs.model }}" -p "You are a Senior Flutter/Dart Developer specializing in cross-platform excellence and clean UI.
+          stdbuf -oL -eL claude --verbose --dangerously-skip-permissions --model "${{ needs.setup.outputs.model }}" -p "You are a Senior Flutter/Dart Developer specializing in cross-platform excellence and clean UI.
           
           Your mission: Resolve GitHub Issue #${{ github.event.issue.number }}: '$ISSUE_TITLE'.
           
