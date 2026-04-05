@@ -22,6 +22,7 @@ gha-runner-scale-set:
       containers:
         - name: runner
           image: ghcr.io/baranacikgoz/homelab-infra/claude-dotnet-developer:latest
+          imagePullPolicy: Always
           # Re-balanced for DIND: 1Gi Limit (Medium variant)
           resources:
             requests:
