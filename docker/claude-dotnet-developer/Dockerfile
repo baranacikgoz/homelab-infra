@@ -1,9 +1,15 @@
-# Base image: .NET 10 SDK (ARM64 compatible)
-FROM mcr.microsoft.com/dotnet/sdk:10.0
+# STAGE 1: Extract .NET 10.0 SDK from the official Microsoft image
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS dotnet-sdk
+
+# STAGE 2: Base image MUST be the official GitHub Actions Runner
+FROM ghcr.io/actions/actions-runner:latest
 
 # Labels for organizational transparency
 LABEL org.opencontainers.image.source="https://github.com/baranacikgoz/homelab-infra"
-LABEL org.opencontainers.image.description="Headless Claude AI Developer for .NET"
+LABEL org.opencontainers.image.description="Headless Claude AI Developer for .NET 10"
+
+# Switch to root to install deep system dependencies
+USER root
 
 # Prevent interactive prompts during build
 ENV DEBIAN_FRONTEND=noninteractive
@@ -13,23 +19,29 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     git \
     gnupg \
+    wget \
     software-properties-common \
     ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
-# 2. Install Node.js (needed for Claude Code)
+# 2. Inject .NET 10.0 SDK from Stage 1
+COPY --from=dotnet-sdk /usr/share/dotnet /usr/share/dotnet
+# Create a symlink to make dotnet globally available
+RUN ln -s /usr/share/dotnet/dotnet /usr/local/bin/dotnet
+
+# 3. Install Node.js (needed for Claude Code)
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs \
     && rm -rf /var/lib/apt/lists/*
 
-# 3. Install GitHub CLI (gh) & Docker CLI
+# 4. Install GitHub CLI (gh) & Docker CLI
 RUN mkdir -p -m 0755 /etc/apt/keyrings \
     && curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null \
     && curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg \
     && chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg \
     && chmod go+r /etc/apt/keyrings/docker.gpg \
     && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
-    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu noble stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null \
+    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu jammy stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null \
     && apt-get update \
     && apt-get install -y --no-install-recommends \
     gh \
@@ -37,20 +49,15 @@ RUN mkdir -p -m 0755 /etc/apt/keyrings \
     docker-compose-plugin \
     && rm -rf /var/lib/apt/lists/*
 
-# 4. Install Claude Code (global install)
+# 5. Install Claude Code (global install)
 RUN npm install -g @anthropic-ai/claude-code
 
-# 5. Setup Security: ai-runner non-root user
-# We use UID 1001 for non-root compliance
-RUN useradd -m -u 1001 -s /bin/bash ai-runner
-USER ai-runner
-WORKDIR /home/ai-runner/work
-
 # 6. Environment setup
-# Ensure npm global bins are in path
 ENV PATH="/usr/local/bin:$PATH"
-# Point Docker CLI to the sidecar daemon
 ENV DOCKER_HOST=tcp://localhost:2375
 
-# Default command: show versions to verify installation
-CMD ["claude", "--version"]
+# Switch back to the required 'runner' user provided by the base image
+USER runner
+WORKDIR /home/runner
+
+# No CMD is needed. The base image automatically executes the runner startup script.
