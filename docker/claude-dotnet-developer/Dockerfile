@@ -54,7 +54,7 @@ RUN npm install -g @anthropic-ai/claude-code
 
 # 6. Environment setup
 ENV PATH="/usr/local/bin:$PATH"
-ENV DOCKER_HOST=tcp://localhost:2375
+ENV DOCKER_HOST=tcp://127.0.0.1:2375
 
 # Switch back to the required 'runner' user provided by the base image
 USER runner

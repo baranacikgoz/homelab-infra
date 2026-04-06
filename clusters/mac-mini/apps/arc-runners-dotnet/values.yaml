@@ -36,7 +36,7 @@ gha-runner-scale-set:
             - name: RUNNER_TAGS
               value: "claude-ai,dotnet-dev"
             - name: DOCKER_HOST
-              value: tcp://localhost:2375
+              value: tcp://127.0.0.1:2375
             - name: ANTHROPIC_API_KEY
               valueFrom:
                 secretKeyRef:
