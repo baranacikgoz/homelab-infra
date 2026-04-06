@@ -21,6 +21,15 @@ gha-runner-scale-set:
     spec:
       securityContext:
         fsGroup: 1001
+      initContainers:
+      - name: init-chmod-diag
+        image: alpine:latest
+        command: ["sh", "-c", "chown -R 1001:1001 /home/runner/_diag"]
+        volumeMounts:
+        - name: diag-logs
+          mountPath: /home/runner/_diag
+        securityContext:
+          runAsUser: 0
       containers:
         - name: runner
           image: ghcr.io/baranacikgoz/homelab-infra/claude-dotnet-developer:latest
