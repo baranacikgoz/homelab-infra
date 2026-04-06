@@ -94,10 +94,37 @@ setup_vaultwarden() {
     fi
 }
 
+setup_claude() {
+    echo -e "${BLUE}=== Setup Claude AI ===${NC}"
+    # Namespace: arc-runners
+    if [ -z "$1" ]; then
+        echo -e "${YELLOW}No API key provided. Please Enter Anthropic API key:${NC} "
+        read -s CLAUDE_KEY
+        echo ""
+    else
+        CLAUDE_KEY="$1"
+    fi
+    
+    if [ -z "$CLAUDE_KEY" ]; then
+        echo -e "${RED}Error: API key cannot be empty.${NC}"
+        return 1
+    fi
+
+    # Ensure namespace exists
+    ssh macserver "kubectl create namespace arc-runners --dry-run=client -o yaml | kubectl apply -f -"
+
+    # Create or Update secret
+    echo -e "${BLUE}Updating secret 'claude-ai-secret' in 'arc-runners'...${NC}"
+    ssh macserver "kubectl create secret generic claude-ai-secret -n arc-runners --from-literal=anthropic_api_key=${CLAUDE_KEY} --dry-run=client -o yaml | kubectl apply -f -"
+    
+    echo -e "${GREEN}✓ Claude AI secret updated successfully.${NC}"
+}
+
 usage() {
-    echo "Usage: $0 [service]"
-    echo "Available services: redis, minio, grafana, vaultwarden"
-    echo "If no service is specified, all secrets will be checked/created."
+    echo "Usage: $0 [service] [args...]"
+    echo "Available services: redis, minio, grafana, vaultwarden, claude"
+    echo "Example for Claude: $0 claude sk-ant-..."
+    echo "If no service is specified, all system secrets will be checked/created (Claude is excluded from full setup to avoid accidental overrides)."
     exit 1
 }
 
@@ -122,6 +149,9 @@ else
             ;;
         vaultwarden)
             setup_vaultwarden
+            ;;
+        claude)
+            setup_claude "$2"
             ;;
         *)
             echo -e "${RED}Invalid service: $1${NC}"

@@ -386,11 +386,11 @@ chmod +x scripts/setup-secrets.sh
 ./scripts/setup-secrets.sh
 ```
 
-This script generates strong random passwords for:
 - **Redis** (`database/redis-secret`)
 - **MinIO** (`minio/minio-secret`)
 - **Grafana** (`monitoring/grafana-secret`)
 - **Vaultwarden** (`vaultwarden/vaultwarden-secret`)
+- **Claude AI** (`arc-runners/claude-ai-secret`)
 
 **⚠️ SAVE THE OUTPUT**: The passwords are shown only once. Store them in a password manager.
 
