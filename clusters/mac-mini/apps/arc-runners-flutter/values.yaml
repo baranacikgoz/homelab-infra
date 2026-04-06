@@ -19,17 +19,6 @@ gha-runner-scale-set:
   
   template:
     spec:
-      securityContext:
-        fsGroup: 1001
-      initContainers:
-      - name: init-chmod-diag
-        image: alpine:latest
-        command: ["sh", "-c", "chown -R 1001:1001 /home/runner/_diag"]
-        volumeMounts:
-        - name: diag-logs
-          mountPath: /home/runner/_diag
-        securityContext:
-          runAsUser: 0
       containers:
         - name: runner
           image: ghcr.io/baranacikgoz/homelab-infra/claude-flutter-developer:latest
@@ -54,9 +43,6 @@ gha-runner-scale-set:
                   name: claude-ai-secret
                   key: anthropic_api_key
                   optional: true
-          volumeMounts:
-            - name: diag-logs
-              mountPath: /home/runner/_diag
         - name: dind
           image: docker:27-dind
           # Small variant for DIND overhead
@@ -75,21 +61,6 @@ gha-runner-scale-set:
           volumeMounts:
             - name: docker-graph-storage
               mountPath: /var/lib/docker
-        - name: observability
-          image: alpine:latest
-          command: ["/bin/sh", "-c", "touch /home/runner/_diag/claude.log && tail -f /home/runner/_diag/claude.log"]
-          resources:
-            requests:
-              cpu: 50m
-              memory: 64Mi
-            limits:
-              cpu: 100m
-              memory: 128Mi
-          volumeMounts:
-            - name: diag-logs
-              mountPath: /home/runner/_diag
       volumes:
         - name: docker-graph-storage
-          emptyDir: {}
-        - name: diag-logs
           emptyDir: {}

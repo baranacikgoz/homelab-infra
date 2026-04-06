@@ -64,11 +64,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CLAUDE_INTERACTIVE: "false"
         run: |
-          # Ensure diag directory exists
-          mkdir -p /home/runner/_diag && touch /home/runner/_diag/claude.log
-          
           # Specialized Flutter Prompt
-          # Piping to tee for sidecar visibility
           stdbuf -oL -eL claude --verbose --dangerously-skip-permissions --model "${{ needs.setup.outputs.model }}" -p "You are a Senior Flutter/Dart Developer specializing in cross-platform excellence and clean UI.
           
           Your mission: Resolve GitHub Issue #${{ github.event.issue.number }}: '$ISSUE_TITLE'.
@@ -84,4 +80,4 @@ jobs:
           5. Create a branch 'claude-fix/flutter-issue-${{ github.event.issue.number }}'.
           6. Push and create a Pull Request with 'Fixes #${{ github.event.issue.number }}'.
           7. The PR MUST have a 'Decisions & Rationale' section explaining your architectural choices.
-          8. If you repeatedly fail to solve the problem, you should stop and report the failure with the root cause, open the PR with the current state and ask for human help. Do not 'loop' on the same failed approach which will result in API Credit waste." 2>&1 | tee /home/runner/_diag/claude.log
+          8. If you repeatedly fail to solve the problem, you should stop and report the failure with the root cause, open the PR with the current state and ask for human help. Do not 'loop' on the same failed approach which will result in API Credit waste."
