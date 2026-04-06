@@ -19,6 +19,8 @@ gha-runner-scale-set:
   
   template:
     spec:
+      securityContext:
+        fsGroup: 1001
       containers:
         - name: runner
           image: ghcr.io/baranacikgoz/homelab-infra/claude-dotnet-developer:latest
