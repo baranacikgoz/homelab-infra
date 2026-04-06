@@ -80,4 +80,14 @@ jobs:
           5. Create a branch 'claude-fix/flutter-issue-${{ github.event.issue.number }}'.
           6. Push and create a Pull Request with 'Fixes #${{ github.event.issue.number }}'.
           7. The PR MUST have a 'Decisions & Rationale' section explaining your architectural choices.
-          8. If you repeatedly fail to solve the problem, you should stop and report the failure with the root cause, open the PR with the current state and ask for human help. Do not 'loop' on the same failed approach which will result in API Credit waste."
+          8. If you repeatedly fail to solve the problem, you should stop and report the failure with the root cause, open the PR with the current state and ask for human help. Do not 'loop' on the same failed approach which will result in API Credit waste." 2>&1 | tee claude-execution.log
+
+      - name: 💾 Archive Agent Logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: claude-flutter-logs-${{ github.event.issue.number }}-${{ github.run_id }}
+          path: |
+            claude-execution.log
+            ~/.claude/
+          retention-days: 14
