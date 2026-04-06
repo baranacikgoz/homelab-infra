@@ -81,6 +81,7 @@ jobs:
 
           read -r -d '' CLAUDE_PROMPT <<EOF || true
           GitHub Issue #${{ github.event.issue.number }}: '$ISSUE_TITLE' is assigned to you.
+          
           $ISSUE_BODY
           EOF
           
