@@ -65,7 +65,7 @@ jobs:
           CLAUDE_INTERACTIVE: "false"
         run: |
           # Define the prompt using a Here-Doc for shell stability
-          read -r -d '' CLAUDE_PROMPT <<EOF
+          read -r -d '' CLAUDE_PROMPT <<EOF || true
           You are a Senior Flutter/Dart Developer specializing in cross-platform excellence and clean UI.
           
           Your mission: Resolve GitHub Issue #${{ github.event.issue.number }}: '$ISSUE_TITLE'.
