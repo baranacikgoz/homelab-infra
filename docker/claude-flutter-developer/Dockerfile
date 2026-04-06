@@ -17,6 +17,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
     gnupg \
     wget \
+    make \
+    build-essential \
     unzip \
     xz-utils \
     zip \
@@ -67,7 +69,7 @@ RUN npm install -g @anthropic-ai/claude-code
 
 # 6. Environment setup
 ENV PATH="/usr/local/bin:$PATH"
-ENV DOCKER_HOST=tcp://127.0.0.1:2375
+ENV DOCKER_HOST=unix:///var/run/dind/docker.sock
 
 # Switch back to the required 'runner' user provided by the base image
 USER runner
