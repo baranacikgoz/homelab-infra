@@ -24,7 +24,7 @@
 # -----------------------------------------------------------------------------
 
 HOSTNAME="db.baranacikgoz.com"
-LOCAL_PORT="5432"
+LOCAL_PORT="15432"
 
 # Check if already running
 PID=$(pgrep -f "cloudflared access tcp --hostname $HOSTNAME")

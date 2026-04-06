@@ -51,8 +51,8 @@ RUN mkdir -p -m 0755 /etc/apt/keyrings \
     docker-compose-plugin \
     && rm -rf /var/lib/apt/lists/*
 
-# 5. Install Claude Code (global install)
-RUN npm install -g @anthropic-ai/claude-code
+# 5. Install Claude Code & MCP Servers (global install)
+RUN npm install -g @anthropic-ai/claude-code @modelcontextprotocol/server-postgres
 
 # 6. Environment setup
 ENV PATH="/usr/local/bin:$PATH"

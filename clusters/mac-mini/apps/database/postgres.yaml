@@ -17,6 +17,15 @@ spec:
     limits:
       memory: "512Mi"
 
+  managed:
+    roles:
+      - name: claude_readonly
+        ensure: present
+        comment: "Read-only role for Claude AI agent"
+        login: true
+        passwordSecret:
+          name: claude-db-readonly-secret
+
   storage:
     size: 5Gi
     storageClass: local-path

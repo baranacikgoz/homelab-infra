@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: claude-mcp-config
+  namespace: arc-runners
+  labels:
+    app: claude-mcp
+data:
+  .claude.json: |
+    {
+      "mcpServers": {
+        "postgres": {
+          "command": "mcp-server-postgres",
+          "args": ["$POSTGRES_URL"]
+        }
+      }
+    }
