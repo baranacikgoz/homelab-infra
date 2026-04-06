@@ -27,7 +27,7 @@ gha-runner-scale-set:
           {{- with secret "apps/data/production/claude-agent/config" -}}
           {{- range $k, $v := .Data.data -}}
           export {{ $k }}="{{ $v }}"
-          {{- end -}}
+          {{ end -}}
           {{- end -}}
     spec:
       serviceAccountName: claude-agent
