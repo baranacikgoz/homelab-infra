@@ -25,13 +25,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libpcre3 \
     libglu1-mesa \
     libnss3 \
-    libatk1.0-0 \
-    libatk-bridge2.0-0 \
-    libcups2 \
+    libatk1.0-0t64 \
+    libatk-bridge2.0-0t64 \
+    libcups2t64 \
     libdrm2 \
     libgbm1 \
-    libgtk-3-0 \
-    libasound2 \
+    libgtk-3-0t64 \
+    libasound2t64 \
     && rm -rf /var/lib/apt/lists/*
 
 # 2. Install Node.js (needed for Claude Code)
@@ -56,13 +56,16 @@ RUN mkdir -p -m 0755 /etc/apt/keyrings \
 
 # 4. Install Flutter SDK
 ENV FLUTTER_HOME=/usr/local/flutter
-RUN git clone https://github.com/flutter/flutter.git -b stable $FLUTTER_HOME
+RUN git clone https://github.com/flutter/flutter.git -b stable $FLUTTER_HOME \
+    && chown -R runner:runner $FLUTTER_HOME
 ENV PATH="$FLUTTER_HOME/bin:$PATH"
 
 # Run pre-cache to prepare the ARM64 binaries
+USER runner
 RUN git config --global --add safe.directory /usr/local/flutter \
     && flutter doctor \
     && flutter precache
+USER root
 
 # 5. Install Claude Code (global install)
 RUN npm install -g @anthropic-ai/claude-code
