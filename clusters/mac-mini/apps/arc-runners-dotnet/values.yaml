@@ -37,14 +37,14 @@ gha-runner-scale-set:
           image: ghcr.io/baranacikgoz/homelab-infra/claude-dotnet-developer:latest
           imagePullPolicy: Always
           command: ["/bin/sh", "-c", "if [ -f /vault/secrets/config.env ]; then . /vault/secrets/config.env; fi; exec /home/runner/run.sh"]
-          # Performance Mode: 6.0 CPU Burst / 2.5Gi RAM
+          # Performance Mode (Elite): 6.0 CPU Burst / 4Gi RAM
           resources:
             requests:
               cpu: 1500m
-              memory: 1Gi
+              memory: 2Gi
             limits:
               cpu: 6000m
-              memory: 2.5Gi
+              memory: 4Gi
           env:
             - name: RUNNER_TAGS
               value: "claude-ai,dotnet-dev"

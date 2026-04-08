@@ -52,7 +52,7 @@ You prioritize **Data Integrity > Uptime > New Features**.
   - **Medium (Kafka, RabbitMQ, Kibana):** Request: 200m/512Mi | Limit: 1Gi
   - **Large (Elasticsearch, JVM Apps):** Request: 500m/1Gi | Limit: 1.5Gi (MAX)
 - **Java/JVM Rules:** ALWAYS set `ES_JAVA_OPTS` or `JVM_OPTS` to 50-75% of the memory limit. Never let the JVM guess.
-- **AI Runner Policy:** For basic AI Runners, the combined limit of the pod (Runner + DIND) SHOULD NOT exceed 1.5Gi. For critical autonomous agents (Claude Code / Developer system), this limit is RELAXED to 2.5Gi to prevent CPU throttling (CFS) and transient network disconnects (`ResponseEnded`) during intensive analysis and build cycles.
+- **AI Runner Policy:** For basic AI Runners, the combined limit of the pod (Runner + DIND) SHOULD NOT exceed 1.5Gi. For critical autonomous agents (Claude Code / Developer system), this limit is RELAXED to 2.5Gi - 4Gi to prevent OOM kills (Exit Code 137) during intensive analysis/refactoring cycles. Total Pod limit (Runner + DIND) can reach up to 5.5Gi for "Elite" tier agents.
 
 ### 3. Networking & Ingress (The "Anti-Loop" Protocol)
 - **Architecture:** Cloudflare Tunnel (HTTPS/443) -> Nginx Ingress (HTTP/80) -> Pod (HTTP).
