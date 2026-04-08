@@ -44,7 +44,17 @@ spec:
                         - name: RUNNER_TAGS
                           value: "ai-dotnet-{{.provider}}-{{.actualModel | default .model}},dotnet-dev"
                         - name: ANTHROPIC_API_KEY
-                          value: "${LITELLM_MASTER_KEY}"
+                          {{- if eq .provider "anthropic" }}
+                          value: "${SK_ANTHROPIC_CI}"
+                          {{- else if eq .provider "openai" }}
+                          value: "${SK_OPENAI_CI}"
+                          {{- else if eq .provider "google" }}
+                          value: "${SK_GOOGLE_CI}"
+                          {{- else if eq .provider "deepseek" }}
+                          value: "${SK_DEEPSEEK_CI}"
+                          {{- else if eq .provider "ollama" }}
+                          value: "${SK_OLLAMA_CI}"
+                          {{- end }}
       destination:
         server: https://kubernetes.default.svc
         namespace: arc-runners
