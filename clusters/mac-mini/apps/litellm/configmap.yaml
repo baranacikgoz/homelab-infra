@@ -49,3 +49,6 @@ data:
     litellm_settings:
       drop_params: true
       set_all_enum_params: true
+    general_settings:
+      master_key: "os.environ/LITELLM_MASTER_KEY"
+      database_url: "os.environ/DATABASE_URL"
