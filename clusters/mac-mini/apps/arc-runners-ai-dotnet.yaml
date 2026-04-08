@@ -36,7 +36,7 @@ spec:
             actualModel: qwen2.5-coder:14b
   template:
     metadata:
-      name: 'arc-runners-ai-dotnet-{{.provider}}-{{.model}}'
+      name: '{{.provider}}-{{.model}}'
     spec:
       project: default
       source:
@@ -46,10 +46,7 @@ spec:
         helm:
           values: |
             gha-runner-scale-set:
-              runnerScaleSetName: "arc-runners-ai-dotnet-{{.provider}}-{{.model}}"
-              runnerLabels:
-                - "ai-dotnet-{{.provider}}-{{.actualModel | default .model}}"
-                - "dotnet-dev"
+              runnerScaleSetName: "ai-dotnet-{{ .provider }}-{{ .model }}"
               template:
                 metadata:
                   annotations:
