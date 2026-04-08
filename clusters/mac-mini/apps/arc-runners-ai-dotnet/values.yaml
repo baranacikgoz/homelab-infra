@@ -1,10 +1,10 @@
-# Scale Set Configuration for the Claude .NET Developer
+# Scale Set Configuration for the Claude .NET Developer (Multi-Provider)
 # Aligned with T-Shirt Medium and Governance Anti-OOM
 
 gha-runner-scale-set:
   githubConfigUrl: "https://github.com/baranacikgoz/modular-monolith-ddd-vsa-webapi"
   githubConfigSecret: arc-github-app-secret
-  runnerScaleSetName: "arc-runners-dotnet"
+  runnerScaleSetName: "placeholder"
   
   # Cross-namespace Controller Discovery
   controllerServiceAccount:
@@ -13,10 +13,7 @@ gha-runner-scale-set:
   
   # Safety boundaries for Mac Mini M4 resource pool
   minRunners: 0
-  maxRunners: 2
-  
-  # Service account to execute high-privilege build actions if needed
-  # Default is fine for now
+  maxRunners: 1 # Concurrency limit: 1 per model queue to prevent hardware saturation
   
   template:
     metadata:
@@ -41,7 +38,7 @@ gha-runner-scale-set:
           image: ghcr.io/baranacikgoz/homelab-infra/claude-dotnet-developer:latest
           imagePullPolicy: Always
           command: ["/bin/sh", "-c", "if [ -f /vault/secrets/config.env ]; then . /vault/secrets/config.env; fi; exec /home/runner/run.sh"]
-          # Performance Mode (Elite): 6.0 CPU Burst / 4Gi RAM
+          # Performance Mode (Elite): 8.0 CPU Burst / 10Gi RAM
           resources:
             requests:
               cpu: 1500m
@@ -53,7 +50,11 @@ gha-runner-scale-set:
             - name: NODE_OPTIONS
               value: "--max-old-space-size=8192"
             - name: RUNNER_TAGS
-              value: "claude-ai,dotnet-dev"
+              value: "placeholder"
+            - name: ANTHROPIC_BASE_URL
+              value: "http://litellm.litellm.svc.cluster.local:4000/v1"
+            - name: ANTHROPIC_API_KEY
+              value: "sk-1234567890" # Matches LiteLLM Master Key
             - name: DOCKER_HOST
               value: unix:///var/run/dind/docker.sock
           volumeMounts:

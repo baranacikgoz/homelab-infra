@@ -1,0 +1,49 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: arc-runners-ai-dotnet
+  namespace: argocd
+spec:
+  goTemplate: true
+  generators:
+    - list:
+        elements:
+          - provider: anthropic
+            model: claude-3-5-sonnet-20241022
+          - provider: openai
+            model: gpt-4o
+          - provider: google
+            model: gemini-1.5-pro
+          - provider: ollama
+            model: qwen2.5-coder-32b # Removed colon for resource naming compatibility
+            actualModel: qwen2.5-coder:32b
+  template:
+    metadata:
+      name: 'arc-runners-ai-dotnet-{{.provider}}-{{.model}}'
+    spec:
+      project: default
+      source:
+        repoURL: git@github.com:baranacikgoz/homelab-infra.git
+        targetRevision: main
+        path: clusters/mac-mini/apps/arc-runners-ai-dotnet
+        helm:
+          values: |
+            gha-runner-scale-set:
+              runnerScaleSetName: "arc-runners-ai-dotnet-{{.provider}}-{{.model}}"
+              template:
+                spec:
+                  containers:
+                    - name: runner
+                      env:
+                        - name: RUNNER_TAGS
+                          value: "ai-dotnet-{{.provider}}-{{.actualModel | default .model}},dotnet-dev"
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: arc-runners
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+          - ServerSideApply=true

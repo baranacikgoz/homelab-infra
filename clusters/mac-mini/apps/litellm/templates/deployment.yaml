@@ -1,0 +1,64 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: litellm
+  namespace: litellm
+spec:
+  ports:
+    - port: 4000
+      targetPort: 4000
+      name: http
+  selector:
+    app: litellm
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: litellm
+  namespace: litellm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: litellm
+  template:
+    metadata:
+      labels:
+        app: litellm
+      annotations:
+        vault.hashicorp.com/agent-inject: "true"
+        vault.hashicorp.com/role: "claude-agent-role" # Reusing the role or creating new? claude-agent-role seems appropriate if it has access to apps/data/production/claude-agent/config
+        vault.hashicorp.com/agent-inject-secret-config.env: "apps/data/production/claude-agent/config"
+        vault.hashicorp.com/agent-inject-template-config.env: |
+          {{- with secret "apps/data/production/claude-agent/config" -}}
+          {{- range $k, $v := .Data.data -}}
+          export {{ $k }}="{{ $v }}"
+          {{ end -}}
+          {{- end -}}
+    spec:
+      containers:
+        - name: litellm
+          image: ghcr.io/berriai/litellm:main-latest
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              if [ -f /vault/secrets/config.env ]; then
+                . /vault/secrets/config.env
+              fi
+              python3 main.py --config /app/config/config.yaml --port 4000
+          ports:
+            - containerPort: 4000
+          volumeMounts:
+            - name: config-volume
+              mountPath: /app/config
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+      volumes:
+        - name: config-volume
+          configMap:
+            name: litellm-config
