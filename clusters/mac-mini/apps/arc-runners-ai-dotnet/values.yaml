@@ -53,8 +53,7 @@ gha-runner-scale-set:
               value: "placeholder"
             - name: ANTHROPIC_BASE_URL
               value: "http://litellm.litellm.svc.cluster.local:4000/v1"
-            - name: ANTHROPIC_API_KEY
-              value: "sk-3f246baac524ee2200fba452887f53c0" # Mapped to new LiteLLM Master Key (Can be swapped with a UI-generated Virtual Key)
+            # ANTHROPIC_API_KEY is dynamically injected by ApplicationSet from provider-specific Virtual Keys
             - name: DOCKER_HOST
               value: unix:///var/run/dind/docker.sock
           volumeMounts:
