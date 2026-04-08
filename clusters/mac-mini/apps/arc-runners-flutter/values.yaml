@@ -2,7 +2,7 @@
 # Aligned with T-Shirt Medium and Governance Anti-OOM
 
 gha-runner-scale-set:
-  githubConfigUrl: "https://github.com/baranacikgoz/modular-monolith-ddd-vsa-webapi"
+  githubConfigUrl: "https://github.com/baranacikgoz"
   githubConfigSecret: arc-github-app-secret
   
   # Cross-namespace Controller Discovery
