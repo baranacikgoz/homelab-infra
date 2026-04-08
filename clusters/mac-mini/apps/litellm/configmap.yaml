@@ -42,6 +42,10 @@ data:
         litellm_params:
           model: ollama/qwen2.5-coder:7b
           api_base: http://ollama.ollama.svc.cluster.local:11434
+      - model_name: smollm:135m
+        litellm_params:
+          model: ollama/smollm:135m
+          api_base: http://ollama.ollama.svc.cluster.local:11434
     litellm_settings:
       drop_params: true
       set_all_enum_params: true
