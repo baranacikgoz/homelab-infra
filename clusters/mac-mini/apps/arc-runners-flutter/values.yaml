@@ -2,7 +2,7 @@
 # Aligned with T-Shirt Medium and Governance Anti-OOM
 
 gha-runner-scale-set:
-  githubConfigUrl: "https://github.com/baranacikgoz"
+  githubConfigUrl: "https://github.com/baranacikgoz/homelab-infra"
   githubConfigSecret: arc-github-app-secret
   
   # Cross-namespace Controller Discovery
