@@ -22,13 +22,33 @@ data:
         litellm_params:
           model: openai/gpt-4o
           api_key: "os.environ/OPENAI_API_KEY"
-      - model_name: o3-mini
+      - model_name: gpt-5.4
         litellm_params:
-          model: openai/o3-mini
+          model: openai/gpt-5.4
           api_key: "os.environ/OPENAI_API_KEY"
-      - model_name: gemini-2.5-pro
+      - model_name: gpt-5.4-mini
         litellm_params:
-          model: gemini/gemini-2.5-pro
+          model: openai/gpt-5.4-mini
+          api_key: "os.environ/OPENAI_API_KEY"
+      - model_name: gpt-5-codex
+        litellm_params:
+          model: openai/gpt-5-codex
+          api_key: "os.environ/OPENAI_API_KEY"
+      - model_name: gpt-5.3-codex
+        litellm_params:
+          model: openai/gpt-5.3-codex
+          api_key: "os.environ/OPENAI_API_KEY"
+      - model_name: gpt-5.2-codex
+        litellm_params:
+          model: openai/gpt-5.2-codex
+          api_key: "os.environ/OPENAI_API_KEY"
+      - model_name: gemini-3.1-pro-preview
+        litellm_params:
+          model: gemini/gemini-3.1-pro-preview
+          api_key: "os.environ/GEMINI_API_KEY"
+      - model_name: gemini-3-flash-preview
+        litellm_params:
+          model: gemini/gemini-3-flash-preview
           api_key: "os.environ/GEMINI_API_KEY"
       - model_name: deepseek-chat
         litellm_params:
@@ -42,9 +62,9 @@ data:
         litellm_params:
           model: ollama/qwen2.5-coder:7b
           api_base: http://ollama.ollama.svc.cluster.local:11434
-      - model_name: smollm:135m
+      - model_name: qwen2.5-coder:14b
         litellm_params:
-          model: ollama/smollm:135m
+          model: ollama/qwen2.5-coder:14b
           api_base: http://ollama.ollama.svc.cluster.local:11434
     litellm_settings:
       drop_params: true
