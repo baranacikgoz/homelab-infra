@@ -9,13 +9,21 @@ spec:
     - list:
         elements:
           - provider: anthropic
-            model: claude-3-7-sonnet-20250219
+            model: claude-sonnet-4-6
+          - provider: anthropic
+            model: claude-opus-4-6
+          - provider: anthropic
+            model: claude-haiku-4-5
           - provider: openai
             model: gpt-4o
           - provider: openai
-            model: o3-mini
+            model: gpt-5.4
+          - provider: openai
+            model: gpt-5.4-mini
+          - provider: openai
+            model: gpt-5-codex
           - provider: google
-            model: gemini-2.5-pro
+            model: gemini-3.1-pro-preview
           - provider: deepseek
             model: deepseek-chat
           - provider: deepseek
@@ -23,6 +31,9 @@ spec:
           - provider: ollama
             model: qwen2.5-coder-7b
             actualModel: qwen2.5-coder:7b
+          - provider: ollama
+            model: qwen2.5-coder-14b
+            actualModel: qwen2.5-coder:14b
   template:
     metadata:
       name: 'arc-runners-ai-dotnet-{{.provider}}-{{.model}}'
