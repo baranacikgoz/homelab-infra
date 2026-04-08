@@ -32,6 +32,10 @@ gha-runner-scale-set:
           {{- end -}}
     spec:
       serviceAccountName: claude-agent
+      dnsConfig:
+        options:
+          - name: ndots
+            value: "1"
       containers:
         - name: runner
           image: ghcr.io/baranacikgoz/homelab-infra/claude-dotnet-developer:latest
@@ -79,6 +83,8 @@ gha-runner-scale-set:
             - --host=tcp://127.0.0.1:2375
             - --tls=false
             - --group=123
+            - --mtu=1400
+            - --dns=1.1.1.1
           volumeMounts:
             - name: docker-graph-storage
               mountPath: /var/lib/docker
