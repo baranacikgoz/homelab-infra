@@ -1,17 +1,20 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: minio
+  name: redis
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   project: default
   source:
     repoURL: git@github.com:baranacikgoz/homelab-infra.git
     targetRevision: main
-    path: clusters/mac-mini/apps/minio
+    path: clusters/mac-mini/disabled/redis
+
   destination:
     server: https://kubernetes.default.svc
-    namespace: minio
+    namespace: database
   syncPolicy:
     automated:
       prune: true

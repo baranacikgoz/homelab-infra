@@ -1,23 +1,26 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: eck-operator
+  name: monitoring
   namespace: argocd
   annotations:
-    argocd.argoproj.io/sync-wave: "-1"
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   project: default
   source:
     repoURL: git@github.com:baranacikgoz/homelab-infra.git
     targetRevision: main
-    path: clusters/mac-mini/apps/eck-operator
+    path: clusters/mac-mini/disabled/monitoring
+
   destination:
     server: https://kubernetes.default.svc
-    namespace: elastic-system
+    namespace: monitoring
+
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+      # Prometheus CRDs are very large, so you might get an error without this setting
       - ServerSideApply=true

@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: monitoring
+  name: kafka
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: "1"
@@ -10,17 +10,13 @@ spec:
   source:
     repoURL: git@github.com:baranacikgoz/homelab-infra.git
     targetRevision: main
-    path: clusters/mac-mini/apps/monitoring
-
+    path: clusters/mac-mini/disabled/kafka
   destination:
     server: https://kubernetes.default.svc
-    namespace: monitoring
-
+    namespace: kafka-system
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
-      # Prometheus CRDs are very large, so you might get an error without this setting
-      - ServerSideApply=true

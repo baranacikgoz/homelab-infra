@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: git@github.com:baranacikgoz/homelab-infra.git
     targetRevision: main
-    path: clusters/mac-mini/apps/rabbitmq
+    path: clusters/mac-mini/disabled/rabbitmq
   destination:
     server: https://kubernetes.default.svc
     namespace: rabbitmq-system

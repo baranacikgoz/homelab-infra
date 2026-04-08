@@ -1,20 +1,23 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: redis-insight
+  name: eck-operator
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
 spec:
   project: default
   source:
     repoURL: git@github.com:baranacikgoz/homelab-infra.git
     targetRevision: main
-    path: clusters/mac-mini/apps/redis-insight
+    path: clusters/mac-mini/disabled/eck-operator
   destination:
     server: https://kubernetes.default.svc
-    namespace: database
+    namespace: elastic-system
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
     syncOptions:
-      - CreateNamespace:true
+      - CreateNamespace=true
+      - ServerSideApply=true
