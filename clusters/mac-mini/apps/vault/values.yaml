@@ -2,11 +2,11 @@ vault:
   server:
     resources:
       requests:
-        cpu: 200m
-        memory: 512Mi
+        cpu: 300m
+        memory: 768Mi
       limits:
-        cpu: 500m
-        memory: 1Gi
+        cpu: 800m
+        memory: 1.5Gi
     
     ingress:
       enabled: true
