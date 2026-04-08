@@ -22,17 +22,17 @@ data:
         litellm_params:
           model: gemini/gemini-2.5-pro
           api_key: "os.environ/GEMINI_API_KEY"
-      - model_name: deepseek-coder
+      - model_name: deepseek-chat
         litellm_params:
-          model: deepseek/deepseek-coder
+          model: deepseek/deepseek-chat
+          api_key: "os.environ/DEEPSEEK_API_KEY"
+      - model_name: deepseek-reasoner
+        litellm_params:
+          model: deepseek/deepseek-reasoner
           api_key: "os.environ/DEEPSEEK_API_KEY"
       - model_name: qwen2.5-coder:7b
         litellm_params:
           model: ollama/qwen2.5-coder:7b
-          api_base: http://ollama.ollama.svc.cluster.local:11434
-      - model_name: deepseek-r1:8b
-        litellm_params:
-          model: ollama/deepseek-r1:8b
           api_base: http://ollama.ollama.svc.cluster.local:11434
     litellm_settings:
       drop_params: true

@@ -17,13 +17,12 @@ spec:
           - provider: google
             model: gemini-2.5-pro
           - provider: deepseek
-            model: deepseek-coder
+            model: deepseek-chat
+          - provider: deepseek
+            model: deepseek-reasoner
           - provider: ollama
             model: qwen2.5-coder-7b
             actualModel: qwen2.5-coder:7b
-          - provider: ollama
-            model: deepseek-r1-8b
-            actualModel: deepseek-r1:8b
   template:
     metadata:
       name: 'arc-runners-ai-dotnet-{{.provider}}-{{.model}}'
