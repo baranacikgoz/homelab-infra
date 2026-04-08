@@ -4,8 +4,7 @@ metadata:
   name: ollama
   namespace: ollama
 spec:
-  ports:
-    - protocol: TCP
-      port: 11434
-      targetPort: 11434
-  type: ClusterIP
+  type: ExternalName
+  externalName: host.orb.internal
+  # Note: ExternalName services do not use selectors.
+  # Pods will resolve 'ollama.ollama.svc.cluster.local' to the host IP.
