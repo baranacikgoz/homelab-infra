@@ -4,7 +4,7 @@
 gha-runner-scale-set:
   githubConfigUrl: "https://github.com/baranacikgoz/homelab-infra"
   githubConfigSecret: arc-github-app-secret
-  runnerScaleSetName: "homelab-flutter-runner"
+  runnerScaleSetName: "arc-runners-flutter"
   
   # Cross-namespace Controller Discovery
   controllerServiceAccount:

@@ -4,7 +4,7 @@
 gha-runner-scale-set:
   githubConfigUrl: "https://github.com/baranacikgoz/modular-monolith-ddd-vsa-webapi"
   githubConfigSecret: arc-github-app-secret
-  runnerScaleSetName: "modular-dotnet-runner"
+  runnerScaleSetName: "arc-runners-dotnet"
   
   # Cross-namespace Controller Discovery
   controllerServiceAccount:
