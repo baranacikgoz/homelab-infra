@@ -36,6 +36,7 @@ spec:
           {{ end -}}
           {{- end -}}
     spec:
+      serviceAccountName: litellm
       containers:
         - name: litellm
           image: ghcr.io/berriai/litellm:main-latest
