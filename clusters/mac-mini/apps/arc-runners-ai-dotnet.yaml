@@ -85,6 +85,12 @@ spec:
                           value: "--max-old-space-size=8192"
                         - name: ANTHROPIC_BASE_URL
                           value: "http://litellm.litellm.svc.cluster.local:4000/v1"
+                      volumeMounts:
+                        - name: dind-sock
+                          mountPath: /var/run/dind
+                        - name: mcp-config
+                          mountPath: /home/runner/.claude.json
+                          subPath: .claude.json
       destination:
         server: https://kubernetes.default.svc
         namespace: arc-runners
