@@ -47,6 +47,9 @@ spec:
           values: |
             gha-runner-scale-set:
               runnerScaleSetName: "arc-runners-ai-dotnet-{{.provider}}-{{.model}}"
+              runnerLabels:
+                - "ai-dotnet-{{.provider}}-{{.actualModel | default .model}}"
+                - "dotnet-dev"
               template:
                 metadata:
                   annotations:
@@ -71,8 +74,8 @@ spec:
                   containers:
                     - name: runner
                       env:
-                        - name: RUNNER_TAGS
-                          value: "ai-dotnet-{{.provider}}-{{.actualModel | default .model}},dotnet-dev"
+                        - name: ANTHROPIC_BASE_URL
+                          value: "http://litellm.litellm.svc.cluster.local:4000/v1"
       destination:
         server: https://kubernetes.default.svc
         namespace: arc-runners
