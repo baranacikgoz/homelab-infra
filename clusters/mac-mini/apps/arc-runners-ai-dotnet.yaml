@@ -70,7 +70,19 @@ spec:
                 spec:
                   containers:
                     - name: runner
+                      image: ghcr.io/baranacikgoz/homelab-infra/claude-dotnet-developer:latest
+                      imagePullPolicy: Always
+                      command: ["/bin/sh", "-c", "if [ -f /vault/secrets/config.env ]; then . /vault/secrets/config.env; fi; exec /home/runner/run.sh"]
+                      resources:
+                        requests:
+                          cpu: 1500m
+                          memory: 4Gi
+                        limits:
+                          cpu: 8000m
+                          memory: 10Gi
                       env:
+                        - name: NODE_OPTIONS
+                          value: "--max-old-space-size=8192"
                         - name: ANTHROPIC_BASE_URL
                           value: "http://litellm.litellm.svc.cluster.local:4000/v1"
       destination:
