@@ -46,7 +46,7 @@ spec:
               if [ -f /vault/secrets/config.env ]; then
                 . /vault/secrets/config.env
               fi
-              python3 main.py --config /app/config/config.yaml --port 4000
+              litellm --config /app/config/config.yaml --port 4000
           ports:
             - containerPort: 4000
           volumeMounts:
