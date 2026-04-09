@@ -84,7 +84,7 @@ spec:
                         - name: NODE_OPTIONS
                           value: "--max-old-space-size=8192"
                         - name: ANTHROPIC_BASE_URL
-                          value: "http://litellm.litellm.svc.cluster.local:4000/v1"
+                          value: "http://litellm.litellm.svc.cluster.local:4000"
                       volumeMounts:
                         - name: dind-sock
                           mountPath: /var/run/dind
