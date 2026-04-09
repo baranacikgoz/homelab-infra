@@ -35,22 +35,27 @@ case "$MODEL_ALIAS" in
     "coder14b"|"coder") SELECTED_MODEL="qwen2.5-coder:14b" ;;
     
     *)
-        # If no match, check if it was a flag (starts with -)
+        # If the first argument is a flag (e.g., ai --version), pass everything directly to claude
         if [[ "$MODEL_ALIAS" == -* ]]; then
-            SELECTED_MODEL="claude-sonnet-4-6"
-        else
-            SELECTED_MODEL="claude-sonnet-4-6"
-            shift 0 # No alias found, treat as first arg handled
+            exec claude "$@"
         fi
+
+        # If empty or invalid alias, show help and exit
+        if [[ -z "$MODEL_ALIAS" ]]; then
+            echo "❌ Error: No model alias provided."
+        else
+            echo "❌ Error: Invalid model alias: '$MODEL_ALIAS'"
+        fi
+        echo ""
+        echo "Usage: ai <alias> [args...]"
+        echo "Available aliases:"
+        echo "  sonnet, opus, haiku, gpt5.4, gpt4o, gpt-mini, codex, gemini-pro, gemini-flash, deepseek-chat, deepseek-reasoner, coder, coder7b"
+        exit 1
         ;;
 esac
 
-# Only shift if we actually matched an alias
-if [[ "$SELECTED_MODEL" != "claude-sonnet-4-6" || "$MODEL_ALIAS" == "sonnet" ]]; then
-    if [[ -n "$MODEL_ALIAS" && "$MODEL_ALIAS" != -* ]]; then
-        shift
-    fi
-fi
+# Shift to remove the model alias from arguments
+shift
 
 # 1. Connectivity Check (Is the tunnel running?)
 if ! lsof -Pi :4000 -sTCP:LISTEN -t >/dev/null; then
@@ -61,4 +66,4 @@ fi
 
 # 2. Run Claude
 echo "🚀 Launching Claude with model: $SELECTED_MODEL via LiteLLM..."
-claude --model "$SELECTED_MODEL" "$@"
+exec claude --model "$SELECTED_MODEL" "$@"
