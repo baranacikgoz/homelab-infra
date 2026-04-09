@@ -24,17 +24,18 @@ HOSTNAME="macserver"
 LOCAL_PORT="4000"
 REMOTE_PORT="4000"
 
-# Check if already running by aggressively matching our specific tunnel pattern
-# (We match the SSH command signature that forwards to port 4000 on the host)
-PID=$(pgrep -f "ssh -N -L $LOCAL_PORT:.*:$REMOTE_PORT $HOSTNAME")
+# Check if already running by looking for port ownership
+PID=$(lsof -ti :$LOCAL_PORT)
 
 if [ -n "$PID" ]; then
     kill "$PID"
+    # Wait a moment for the port to be released
+    sleep 1
     echo "🔌 AI Gateway Disconnected (PID: $PID)"
     exit 0
 fi
 
-# Fetch the Litellm Cluster IP dynamically in case the service was recreated
+# Fetch the Litellm Cluster IP dynamically
 CLUSTER_IP=$(ssh "$HOSTNAME" "kubectl get svc -n litellm litellm -o jsonpath='{.spec.clusterIP}'" 2>/dev/null)
 
 if [ -z "$CLUSTER_IP" ]; then
@@ -42,20 +43,18 @@ if [ -z "$CLUSTER_IP" ]; then
     exit 1
 fi
 
-# Start the SSH tunnel in the background with keep-alive to prevent drops
+# Start the SSH tunnel in the background with keep-alive
 nohup ssh -N \
   -o "ServerAliveInterval 30" \
   -o "ServerAliveCountMax 3" \
   -o "ExitOnForwardFailure yes" \
   -L "$LOCAL_PORT:$CLUSTER_IP:$REMOTE_PORT" "$HOSTNAME" > /dev/null 2>&1 &
 
-# Brief pause to verify if it spawned correctly
-sleep 1
-NEW_PID=$(pgrep -f "ssh -N -L $LOCAL_PORT:$CLUSTER_IP:$REMOTE_PORT $HOSTNAME")
-
-if [ -n "$NEW_PID" ]; then
-    echo "🚀 Connected: http://localhost:$LOCAL_PORT (Bypassing Cloudflare)"
+# Verify if the port is now being listened on
+sleep 2
+if lsof -Pi :$LOCAL_PORT -sTCP:LISTEN -t >/dev/null; then
+    echo "🚀 Connected: http://localhost:$LOCAL_PORT"
 else
-    echo "❌ Error: Failed to start SSH tunnel process."
+    echo "❌ Error: Tunnel failed to bind to port $LOCAL_PORT."
     exit 1
 fi
