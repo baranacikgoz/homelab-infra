@@ -43,10 +43,13 @@ if [ -z "$CLUSTER_IP" ]; then
     exit 1
 fi
 
-# Start the SSH tunnel in the background with keep-alive
+# Start the SSH tunnel in the background with highly aggressive keep-alive
+# (Critical for long-running models like deepseek-reasoner that have long times-to-first-token)
 nohup ssh -N \
-  -o "ServerAliveInterval 30" \
-  -o "ServerAliveCountMax 3" \
+  -o "ServerAliveInterval 10" \
+  -o "ServerAliveCountMax 6" \
+  -o "TCPKeepAlive yes" \
+  -o "IPQoS=throughput" \
   -o "ExitOnForwardFailure yes" \
   -L "$LOCAL_PORT:$CLUSTER_IP:$REMOTE_PORT" "$HOSTNAME" > /dev/null 2>&1 &
 
