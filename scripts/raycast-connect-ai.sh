@@ -42,8 +42,12 @@ if [ -z "$CLUSTER_IP" ]; then
     exit 1
 fi
 
-# Start the SSH tunnel in the background
-nohup ssh -N -L "$LOCAL_PORT:$CLUSTER_IP:$REMOTE_PORT" "$HOSTNAME" > /dev/null 2>&1 &
+# Start the SSH tunnel in the background with keep-alive to prevent drops
+nohup ssh -N \
+  -o "ServerAliveInterval 30" \
+  -o "ServerAliveCountMax 3" \
+  -o "ExitOnForwardFailure yes" \
+  -L "$LOCAL_PORT:$CLUSTER_IP:$REMOTE_PORT" "$HOSTNAME" > /dev/null 2>&1 &
 
 # Brief pause to verify if it spawned correctly
 sleep 1
